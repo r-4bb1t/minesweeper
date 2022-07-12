@@ -1,10 +1,63 @@
 @import url("//cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css");
 
 * {
-    box-sizing: border-box;
-    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  box-sizing: border-box;
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
 
 .keep-all {
-    word-break: keep-all;
+  word-break: keep-all;
+}
+
+.cell {
+  background: rgba(44, 21, 52, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(50, 47, 75, 0.3);
+}
+
+.opened-cell {
+  background: rgba(223, 220, 239, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(50, 47, 75, 0.3);
+}
+
+.mine-cell {
+  background: rgba(228, 106, 106, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(50, 47, 75, 0.3);
+}
+
+.item-cell {
+  background: rgba(106, 185, 213, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(50, 47, 75, 0.3);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.after-text:after {
+  content: " ▼";
+  animation: blink 1s step-end infinite;
+}
+
+.after-text.is-typing:after {
+  content: " _";
+  animation: blink 1s step-end infinite;
 }

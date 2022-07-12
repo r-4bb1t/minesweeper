@@ -20,7 +20,7 @@ const HOST = process.env.VERCEL ? "" : `${HTTPS}://${process.env.HOST || "localh
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
   compiler: {
     removeConsole: {

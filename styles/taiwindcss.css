@@ -3,5 +3,23 @@
 @tailwind utilities;
 
 @layer components {
-    
+}
+
+.animation-fill-none {
+  animation-fill-mode: none;
+}
+
+.animation-fill-forwards {
+  animation-fill-mode: forwards;
+}
+
+.animation-fill-backwards {
+  animation-fill-mode: backwards;
+}
+
+.animation-fill-[key] {
+  animation-fill-mode: [value];
+  /* when the default fill mode is a value other than "none": */
+  --animation-fill-mode: [value];
+  animation-fill-mode: var(--animation-fill-mode);
 }
