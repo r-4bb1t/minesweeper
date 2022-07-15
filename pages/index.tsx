@@ -37,6 +37,7 @@ const Home: NextPage = () => {
   );
   const [mo, setMo] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => false)));
   const [mm, setMm] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
+  const [isEffect, setIsEffect] = useState(false);
 
   const [isbattle, setIsBattle] = useState(false);
 
@@ -117,7 +118,13 @@ const Home: NextPage = () => {
     const a = [[xx, yy]];
     const initMo = Array.from(mo);
     initMo[a[0][0]][a[0][1]] = true;
-    if (mp[a[0][0]][a[0][1]] === CELL.monster) setIsBattle(true);
+    if (mp[a[0][0]][a[0][1]] === CELL.monster) {
+      setIsEffect(true);
+      setTimeout(() => {
+        setIsBattle(true);
+        setIsEffect(false);
+      }, 1000);
+    }
     if (mp[a[0][0]][a[0][1]] === 0 && ms[a[0][0]][a[0][1]].count === 0)
       while (a.length > 0) {
         let x = a[0][0],
@@ -155,7 +162,11 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div className="w-screen h-screen flex items-center justify-center p-3 bg-[url(https://images.unsplash.com/photo-1569982175971-d92b01cf8694)] bg-cover bg-center">
+      <div
+        className={`w-screen h-screen flex items-center justify-center p-3 bg-[url(https://images.unsplash.com/photo-1569982175971-d92b01cf8694)] bg-cover bg-center ${
+          isEffect && "animate-scale"
+        }`}
+      >
         <div className="w-full max-w-[600px] aspect-square grid grid-cols-11 gap-[2px] justify-center items-center">
           {mp.map((line, i) =>
             line.map((cell, j) => (

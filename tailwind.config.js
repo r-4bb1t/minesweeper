@@ -26,12 +26,30 @@ module.exports = {
             transform: "translate3d(4px, 4px, 0)",
           },
         },
+        scale: {
+          "0%": {
+            transform: "scale(1.0)",
+          },
+          "50%": {
+            transform: "scale(1.2)",
+          },
+          "70%": {
+            transform: "scale(1.0)",
+          },
+          "90%": {
+            transform: "scale(1.7)",
+          },
+          "100%": {
+            transform: "scale(1.0)",
+          },
+        },
       },
       animation: {
         initcell: "initcell 0.25s ease",
         hovercell: "hovercell 1s ease",
         "pulse-2": "pulse 0.5s ease 2",
         shake: "shake .3s cubic-bezier(.36,.07,.19,.97) both",
+        scale: "scale 1s cubic-bezier(.36,.07,.19,.97)",
       },
     },
   },
