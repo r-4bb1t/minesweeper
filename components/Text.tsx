@@ -12,6 +12,7 @@ interface TextProps {
   teamIndex: number;
   nextTeam: () => void;
   options: any;
+  setEnemyHp: (a: number | any) => void;
 }
 
 const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => {
@@ -25,7 +26,7 @@ const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => 
   );
 };
 
-const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProps) => {
+const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -35,6 +36,7 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProp
   }, [index]);
 
   useEffect(() => {
+    if (!textRef.current) return;
     const interval = setInterval(() => textRef.current!.scrollTo({ top: 20000, behavior: "smooth" }), 1000);
     if (isFinished) clearInterval(interval);
   }, [isFinished]);
@@ -92,7 +94,10 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProp
                       key={i}
                       onClick={
                         teamIndex < 3
-                          ? nextTeam
+                          ? () => {
+                              setEnemyHp((s: number) => s - optionscript[o].attack);
+                              nextTeam();
+                            }
                           : () => {
                               setIndex(script[index].next || 0);
                               nextTeam();

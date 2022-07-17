@@ -37,6 +37,9 @@ const Home: NextPage = () => {
   );
   const [mo, setMo] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => false)));
   const [mm, setMm] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
+
+  const [hps, setHps] = useState([50, 50, 50, 50]);
+
   const [isEffect, setIsEffect] = useState(false);
 
   const [isBattle, setIsBattle] = useState(false);
@@ -175,7 +178,7 @@ const Home: NextPage = () => {
       <div
         className={`w-screen h-screen flex items-center justify-center p-3 bg-blue-200 ${isEffect && "animate-scale"}`}
       >
-        <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
+        <div className="w-full max-w-[700px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
               <div
@@ -213,7 +216,7 @@ const Home: NextPage = () => {
           )}
         </div>
       </div>
-      {isBattle && <Battle endBattle={() => setIsBattle(false)} />}
+      {isBattle && <Battle endBattle={() => setIsBattle(false)} hps={hps} setHps={setHps} />}
     </>
   );
 };
