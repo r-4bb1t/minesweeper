@@ -35,7 +35,7 @@ const Battle = ({ endBattle }: BattleProps) => {
           setIndex={setIndex}
           options={[0, 1, 2, 3]}
           teamIndex={teamIndex}
-          nextTeam={() => setTeamIndex((i) => i + 1)}
+          nextTeam={() => setTeamIndex((i) => (i + 1) % 4)}
         />
       </div>
     </div>
