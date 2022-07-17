@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { WindupChildren, useSkip, Effect, Pause, Pace, useIsFinished } from "windups";
 import script from "./script.json";
 import optionscript from "./options.json";
@@ -36,14 +36,18 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp
   }, [index]);
 
   useEffect(() => {
-    if (!textRef.current) return;
-    const interval = setInterval(() => textRef.current!.scrollTo({ top: 20000, behavior: "smooth" }), 1000);
+    const interval = setInterval(
+      () => textRef.current && textRef.current!.scrollTo({ top: 20000, behavior: "smooth" }),
+      1000,
+    );
     if (isFinished) clearInterval(interval);
   }, [isFinished]);
 
   useEffect(() => {
     setTimeout(() => setLoaded(true), 1000);
   }, []);
+
+  useEffect(() => console.log("Rerendered"));
 
   return (
     <div className="w-full flex flex-col min-h-0 p-2 h-full max-h-full relative bg-black text-white md:rounded-b-xl flex-shrink">
@@ -136,4 +140,8 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp
   );
 };
 
-export default Text;
+export default React.memo(
+  Text,
+  (prevProps: TextProps, nextProps: TextProps) =>
+    prevProps.index === nextProps.index && prevProps.teamIndex === nextProps.teamIndex,
+);

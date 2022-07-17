@@ -16,6 +16,7 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
   const [teamIndex, setTeamIndex] = useState(0);
   const [enemyHp, setEnemyHp] = useState(50);
   const [isEnemyAttacked, setIsEnemyAttacked] = useState(false);
+  const [isAttacked, setIsAttacked] = useState([false, false, false, false]);
 
   useEffect(() => {
     setIsEnemyAttacked(true);
@@ -25,12 +26,25 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
   }, [enemyHp]);
 
   useEffect(() => {
-    if ("attack" in script[index]) {
-      const attacks = enemy_attack[script[index].attack!].attack;
-      const randomAttack = attacks[Math.floor(Math.random() * attacks.length)];
-      const newHps = hps.map((hp, i) => hp - randomAttack[i]);
+    if (isAttacked.every((_) => false)) return;
+    setTimeout(() => {
+      setIsAttacked((s) => s.map((_) => false));
+    }, 1000);
+  }, [isAttacked]);
+
+  useEffect(() => {
+    if (!("attack" in script[index])) return;
+    const attacks = enemy_attack[script[index].attack!].attack;
+    const newAttacked = Array.from(isAttacked);
+    const randomAttack = attacks[Math.floor(Math.random() * attacks.length)];
+    const newHps = hps.map((hp, i) => {
+      if (randomAttack[i] > 0) newAttacked[i] = true;
+      return hp - randomAttack[i];
+    });
+    setTimeout(() => {
       setHps(newHps);
-    }
+      setIsAttacked(newAttacked);
+    }, 1000);
   }, [index]);
 
   return (
@@ -63,7 +77,10 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
                 style={{ height: `calc(${(hps[i] / 50) * 100}% - 1rem)` }}
               ></div>
               <div className="absolute inset-2">
-                <img src={`/assets/team${a}.gif`} className="object-contain z-[3000]" />
+                <img
+                  src={`/assets/team${a}.gif`}
+                  className={cc(["object-contain z-[3000]", isAttacked[i] && "animate-pulse"])}
+                />
               </div>
             </div>
           ))}
