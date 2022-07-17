@@ -26,7 +26,7 @@ enum CELL {
 }
 
 const Home: NextPage = () => {
-  const sz = 11;
+  const sz = 21;
   const [mp, setMp] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
   const [ms, setMs] = useState(
     Array.from({ length: sz }, () =>
@@ -163,11 +163,9 @@ const Home: NextPage = () => {
   return (
     <>
       <div
-        className={`w-screen h-screen flex items-center justify-center p-3 bg-[url(https://images.unsplash.com/photo-1569982175971-d92b01cf8694)] bg-cover bg-center ${
-          isEffect && "animate-scale"
-        }`}
+        className={`w-screen h-screen flex items-center justify-center p-3 bg-blue-200 ${isEffect && "animate-scale"}`}
       >
-        <div className="w-full max-w-[600px] aspect-square grid grid-cols-11 gap-[2px] justify-center items-center">
+        <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(21,minmax(0,1fr))] gap-[2px] justify-center items-center">
           {mp.map((line, i) =>
             line.map((cell, j) => (
               <div className={`${!mo[i][j] && "hover:animate-hovercell"} w-full h-full relative`} key={i * 10000 + j}>
