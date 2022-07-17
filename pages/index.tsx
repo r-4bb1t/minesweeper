@@ -39,7 +39,8 @@ const Home: NextPage = () => {
   const [mm, setMm] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
   const [isEffect, setIsEffect] = useState(false);
 
-  const [isbattle, setIsBattle] = useState(false);
+  const [isBattle, setIsBattle] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -115,6 +116,7 @@ const Home: NextPage = () => {
   };
 
   const open = (xx: number, yy: number) => {
+    if (!isPlaying) return;
     const a = [[xx, yy]];
     const initMo = Array.from(mo);
     initMo[a[0][0]][a[0][1]] = true;
@@ -160,6 +162,14 @@ const Home: NextPage = () => {
     setMapOpen();
   }, [ms]);
 
+  useEffect(() => {
+    if (!isBattle && mo.some((m) => m.some((mm) => mm))) {
+      setIsPlaying(true);
+      return;
+    }
+    setIsPlaying(false);
+  }, [mo, isBattle]);
+
   return (
     <>
       <div
@@ -200,7 +210,7 @@ const Home: NextPage = () => {
           )}
         </div>
       </div>
-      {isbattle && <Battle endBattle={() => setIsBattle(false)} />}
+      {isBattle && <Battle endBattle={() => setIsBattle(false)} />}
     </>
   );
 };

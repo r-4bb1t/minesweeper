@@ -2,19 +2,13 @@
   {
     "index": 0,
     "mimi": 1,
-    "texts": ["야생의 양이 나타났다!", 1000, "어떻게 할까?", 1000, "/shake", "크와아앙"],
-    "background": "https://images.unsplash.com/photo-1567880905822-56f8e06fe630",
-    "options": [
-      { "text": "대화하기", "index": 1 },
-      { "text": "건초 주기", "index": 2 }
-    ]
+    "texts": ["야생의 양이 나타났다!", 1000, "/shake", "크와아앙"],
+    "next": 1
   },
+  { "index": 1, "texts": [], "next": 2 },
   {
-    "index": 1,
+    "index": 2,
     "mimi": 1,
-    "texts": ["/shake", "크와아앙!!", 1000, "양이 개빡쳣다."],
-    "background": "https://images.unsplash.com/photo-1567880905822-56f8e06fe630",
-    "options": [{ "text": "도망치기", "index": 3 }],
-    "next": 2
+    "texts": ["/shake", "크와아앙!!", 1000, "양이 개빡쳣다."]
   }
 ]
