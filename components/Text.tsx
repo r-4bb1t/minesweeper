@@ -33,7 +33,7 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProp
   }, [index]);
 
   useEffect(() => {
-    const interval = setInterval(() => textRef.current!.scrollTo({ top: 20000, behavior: "smooth" }), 100);
+    const interval = setInterval(() => textRef.current!.scrollTo({ top: 20000, behavior: "smooth" }), 1000);
     if (isFinished) clearInterval(interval);
   }, [isFinished]);
 
