@@ -31,21 +31,21 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProp
   useEffect(() => {
     setIsFinished(false);
   }, [index]);
+
   useEffect(() => {
-    textRef.current!.scrollTo({ top: 20000, behavior: "smooth" });
-  });
+    const interval = setInterval(() => textRef.current!.scrollTo({ top: 20000, behavior: "smooth" }), 100);
+    if (isFinished) clearInterval(interval);
+  }, [isFinished]);
 
   return (
-    <div
-      className="w-full flex flex-col h-full max-h-full overflow-y-auto relative bg-black text-white rounded-b-xl"
-      ref={textRef}
-    >
+    <div className="w-full flex flex-col min-h-0 p-2 h-full max-h-full relative bg-black text-white md:rounded-b-xl flex-shrink">
       <div
         className={cc([
-          "w-full px-8 py-8",
+          "w-full px-8 py-4 max-h-full overflow-y-auto",
           (!isFinished || script[index].next) && index % 2 !== 1 && "after-text",
           !isFinished && "is-typing",
         ])}
+        ref={textRef}
       >
         <WindupChildren onFinished={() => setIsFinished(true)}>
           <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
@@ -78,11 +78,24 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProp
               <div className="h-2"></div>
               {options.map((o: number, i: number) => (
                 <div
-                  className="ml-1 hover:bg-white hover:bg-opacity-20 font-bold cursor-pointer"
+                  className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
                   key={i}
-                  onClick={nextTeam}
+                  onClick={teamIndex < 3 ? nextTeam : () => setIndex(script[index].next || 0)}
                 >
-                  {">"} {optionscript[o].title}
+                  {">"} {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
+                  {(optionscript[o].attack > 0 || optionscript[o].heal > 0 || optionscript[o].defence > 0) && (
+                    <>
+                      {optionscript[o].attack > 0 && (
+                        <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+                      )}
+                      {optionscript[o].heal > 0 && (
+                        <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+                      )}
+                      {optionscript[o].defence > 0 && (
+                        <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+                      )}
+                    </>
+                  )}
                 </div>
               ))}
             </>

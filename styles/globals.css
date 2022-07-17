@@ -76,3 +76,16 @@ html {
   content: " _";
   animation: blink 1s step-end infinite;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+}

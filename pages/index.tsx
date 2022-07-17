@@ -178,7 +178,7 @@ const Home: NextPage = () => {
         <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(21,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
-              <div className={`${!mo[i][j] && "hhover:animate-hovercell"} w-full h-full relative`} key={i * 10000 + j}>
+              <div className={`${!mo[i][j] && "hover:animate-hovercell"} w-full h-full relative`} key={i * 10000 + j}>
                 <div
                   className={`w-full h-full flex items-center justify-center font-bold
                 cell
