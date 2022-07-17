@@ -78,7 +78,7 @@ const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
           className={cc(["w-full md:h-60 h-1/3 object-contain p-10 flex-shrink-0", isEnemyAttacked && "animate-shake"])}
         />
         <div className="w-full grid grid-cols-4 bg-slate-200">
-          {[0, ...allies].map((a, i) => (
+          {allies.map((a, i) => (
             <div
               className={cc([
                 "aspect-square w-full relative",
@@ -113,9 +113,10 @@ const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
           setIndex={setIndex}
           options={[0, 1, 2, 3]}
           teamIndex={teamIndex}
-          nextTeam={() => setTeamIndex((i) => (i + 1) % 4)}
+          nextTeam={() => setTeamIndex((i) => (i + 1) % allies.length)}
           setEnemyHp={setEnemyHp}
           isEnd={enemyHp <= 0 && !myTurn}
+          allies={allies}
         />
       </motion.div>
     </div>

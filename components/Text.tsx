@@ -4,6 +4,7 @@ import script from "../scripts/script.json";
 import optionscript from "../scripts/options.json";
 import enemy_attack from "../scripts/enemy_attack.json";
 import cc from "classcat";
+import allies_info from "../scripts/allies_info.json";
 
 interface TextProps {
   shake: () => void;
@@ -14,6 +15,7 @@ interface TextProps {
   options: any;
   setEnemyHp: (a: number | any) => void;
   isEnd: boolean;
+  allies: number[];
 }
 
 const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => {
@@ -27,7 +29,7 @@ const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => 
   );
 };
 
-const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp }: TextProps) => {
+const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp, allies }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -88,9 +90,7 @@ const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, set
                 "스크립트 끗"
               )}
               {index % 2 === 1 && (
-                <span className="digital">
-                  {["가람이", "나람이", "다람이", "라람이"][teamIndex % 4]}는 어떻게 할까?
-                </span>
+                <span className="digital">{allies_info[allies[teamIndex]].name}은(는) 어떻게 할까?</span>
               )}
             </Pace>
             {index % 2 === 1 ? (
@@ -102,7 +102,7 @@ const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, set
                       className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
                       key={i}
                       onClick={
-                        teamIndex < 3
+                        teamIndex < allies.length - 1
                           ? () => {
                               setEnemyHp((s: number) => s - optionscript[o].attack);
                               nextTeam();

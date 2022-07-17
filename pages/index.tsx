@@ -49,7 +49,7 @@ const Home: NextPage = () => {
   const [isBattle, setIsBattle] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const [allies, setAllies] = useState([]);
+  const [allies, setAllies] = useState([0]);
   const [isAllyOpen, setIsAllyOpen] = useState(-1);
 
   const setMap = () => {
