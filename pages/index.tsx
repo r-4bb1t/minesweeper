@@ -165,12 +165,12 @@ const Home: NextPage = () => {
       <div
         className={`w-screen h-screen flex items-center justify-center p-3 bg-blue-200 ${isEffect && "animate-scale"}`}
       >
-        <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(21,minmax(0,1fr))] gap-[2px] justify-center items-center">
+        <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(21,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
-              <div className={`${!mo[i][j] && "hover:animate-hovercell"} w-full h-full relative`} key={i * 10000 + j}>
+              <div className={`${!mo[i][j] && "hhover:animate-hovercell"} w-full h-full relative`} key={i * 10000 + j}>
                 <div
-                  className={`w-full h-full flex items-center justify-center font-bold animate-initcell animation-fill-backwards
+                  className={`w-full h-full flex items-center justify-center font-bold
                 cell
                 ${mo[i][j] && "opened-cell"}
                 ${mo[i][j] && cell === 1 && "mine-cell"}
