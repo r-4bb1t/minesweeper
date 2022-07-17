@@ -1,6 +1,9 @@
+import AllyModal from "components/AllyModal";
 import Battle from "components/Battle";
 import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
+import allies_info from "../scripts/allies_info.json";
+import { AnimatePresence } from "framer-motion";
 
 const dir = [
   [1, 0],
@@ -23,6 +26,7 @@ enum CELL {
   none,
   monster,
   item,
+  ally,
 }
 
 const Home: NextPage = () => {
@@ -44,6 +48,9 @@ const Home: NextPage = () => {
 
   const [isBattle, setIsBattle] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const [allies, setAllies] = useState([]);
+  const [isAllyOpen, setIsAllyOpen] = useState(-1);
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -76,6 +83,21 @@ const Home: NextPage = () => {
         y = Math.floor(Math.random() * sz);
       }
       initMp[x][y] = CELL.item;
+    }
+    for (let i = 0; i < sz / 2; i++) {
+      let x = Math.floor(Math.random() * sz);
+      let y = Math.floor(Math.random() * sz);
+      while (
+        initMp[x][y] !== CELL.none ||
+        (x >= Math.floor(sz / 2) - 1 &&
+          y >= Math.floor(sz / 2) - 1 &&
+          x <= Math.floor(sz / 2) + 1 &&
+          y <= Math.floor(sz / 2) + 1)
+      ) {
+        x = Math.floor(Math.random() * sz);
+        y = Math.floor(Math.random() * sz);
+      }
+      initMp[x][y] = CELL.ally;
     }
     setMp(initMp);
   };
@@ -130,6 +152,15 @@ const Home: NextPage = () => {
         setIsEffect(false);
       }, 1000);
     }
+
+    if (mp[a[0][0]][a[0][1]] === CELL.ally) {
+      //setIsEffect(true);
+      setTimeout(() => {
+        setIsAllyOpen(Math.floor(Math.random() * allies_info.length - 1));
+        //setIsEffect(false);
+      }, 1000);
+    }
+
     if (mp[a[0][0]][a[0][1]] === 0 && ms[a[0][0]][a[0][1]].count === 0)
       while (a.length > 0) {
         let x = a[0][0],
@@ -166,12 +197,12 @@ const Home: NextPage = () => {
   }, [ms]);
 
   useEffect(() => {
-    if (!isBattle && mo.some((m) => m.some((mm) => mm))) {
+    if (!isBattle && isAllyOpen === -1 && mo.some((m) => m.some((mm) => mm))) {
       setIsPlaying(true);
       return;
     }
     setIsPlaying(false);
-  }, [mo, isBattle]);
+  }, [mo, isBattle, isAllyOpen]);
 
   return (
     <>
@@ -191,6 +222,7 @@ const Home: NextPage = () => {
                 ${mo[i][j] && "opened-cell"}
                 ${mo[i][j] && cell === 1 && "mine-cell"}
                 ${mo[i][j] && cell === 2 && "item-cell"}
+                ${mo[i][j] && cell === 3 && "ally-cell"}
                 ${(!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "text-transparent"}
                 `}
                   style={{ animationDelay: `${(i + j) / 10}s` }}
@@ -203,12 +235,13 @@ const Home: NextPage = () => {
                     open(i, j);
                   }}
                 >
-                  {mo[i][j] ? [ms[i][j].count, "!", "♥"][cell] : "."}
+                  {mo[i][j] ? [ms[i][j].count, "!", "♥", "🥰"][cell] : "."}
                 </div>
                 {!mo[i][j] && mm[i][j] > 0 && (
                   <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center pointer-events-none">
                     {mm[i][j] === 1 && <div className="text-red-400">▲</div>}
                     {mm[i][j] === 2 && <div className="text-blue-400">▲</div>}
+                    {mm[i][j] === 3 && <div className="text-yellow-400">▲</div>}
                   </div>
                 )}
               </div>
@@ -216,7 +249,10 @@ const Home: NextPage = () => {
           )}
         </div>
       </div>
-      {isBattle && <Battle endBattle={() => setIsBattle(false)} hps={hps} setHps={setHps} />}
+      <AnimatePresence>
+        {isBattle && <Battle endBattle={() => setIsBattle(false)} hps={hps} setHps={setHps} allies={allies} />}
+        {isAllyOpen !== -1 && <AllyModal />}
+      </AnimatePresence>
     </>
   );
 };

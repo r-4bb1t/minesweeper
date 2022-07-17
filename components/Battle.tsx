@@ -1,26 +1,34 @@
 import { useEffect, useState } from "react";
 import cc from "classcat";
 import Text from "./Text";
-import script from "./script.json";
-import enemy_attack from "./enemy_attack.json";
+import script from "../scripts/script.json";
+import enemy_attack from "../scripts/enemy_attack.json";
+import { motion } from "framer-motion";
 
 interface BattleProps {
   hps: number[];
   setHps: (a: number | any) => void;
   endBattle: () => void;
+  allies: number[];
 }
 
-const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
+const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
   const [index, setIndex] = useState(0);
   const [teamIndex, setTeamIndex] = useState(0);
   const [enemyHp, setEnemyHp] = useState(50);
   const [isEnemyAttacked, setIsEnemyAttacked] = useState(false);
   const [isAttacked, setIsAttacked] = useState([false, false, false, false]);
+  const [myTurn, setMyTurn] = useState(false);
 
   useEffect(() => {
     setTeamIndex(0);
+    setMyTurn(index % 2 === 1);
   }, [index]);
+
+  useEffect(() => {
+    if (myTurn && enemyHp <= 0) endBattle();
+  }, [myTurn]);
 
   useEffect(() => {
     setIsEnemyAttacked(true);
@@ -53,7 +61,10 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
 
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 100, scale: 0.3 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
         className={cc([
           "w-full h-full max-w-[650px] md:h-[650px] bg-white md:rounded-2xl flex flex-col items-center",
           isEffect && "animate-shake",
@@ -67,11 +78,11 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
           className={cc(["w-full md:h-60 h-1/3 object-contain p-10 flex-shrink-0", isEnemyAttacked && "animate-shake"])}
         />
         <div className="w-full grid grid-cols-4 bg-slate-200">
-          {[1, 2, 3, 4].map((a, i) => (
+          {[0, ...allies].map((a, i) => (
             <div
               className={cc([
                 "aspect-square w-full relative",
-                index % 2 === 1 && teamIndex === i && "bg-slate-300",
+                myTurn && teamIndex === i && "bg-slate-300",
                 hps[i] <= 0 && "opacity-20",
               ])}
               key={a}
@@ -104,8 +115,9 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
           teamIndex={teamIndex}
           nextTeam={() => setTeamIndex((i) => (i + 1) % 4)}
           setEnemyHp={setEnemyHp}
+          isEnd={enemyHp <= 0 && !myTurn}
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

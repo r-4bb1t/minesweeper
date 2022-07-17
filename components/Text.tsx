@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { WindupChildren, useSkip, Effect, Pause, Pace, useIsFinished } from "windups";
-import script from "./script.json";
-import optionscript from "./options.json";
-import enemy_attack from "./enemy_attack.json";
+import script from "../scripts/script.json";
+import optionscript from "../scripts/options.json";
+import enemy_attack from "../scripts/enemy_attack.json";
 import cc from "classcat";
 
 interface TextProps {
@@ -13,6 +13,7 @@ interface TextProps {
   nextTeam: () => void;
   options: any;
   setEnemyHp: (a: number | any) => void;
+  isEnd: boolean;
 }
 
 const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => {
@@ -26,7 +27,7 @@ const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => 
   );
 };
 
-const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp }: TextProps) => {
+const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -63,25 +64,29 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp
           <WindupChildren onFinished={() => setIsFinished(true)}>
             <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
             <Pace ms={50}>
-              {script[index]
-                ? script[index].texts.map((t, i) => {
-                    if (typeof t === "number") {
-                      return (
-                        <span key={i}>
-                          <Pause ms={t} />
-                          <br />
-                        </span>
-                      );
-                    } else if (t === "/shake") {
-                      return <Effect fn={shake} key={i} />;
-                    } else
-                      return (
-                        <span key={i} className="digital">
-                          {t}
-                        </span>
-                      );
-                  })
-                : "스크립트 끗"}
+              {isEnd ? (
+                <span className="digital">양이 쓰러졌다.</span>
+              ) : script[index] ? (
+                script[index].texts.map((t, i) => {
+                  if (typeof t === "number") {
+                    return (
+                      <span key={i}>
+                        <Pause ms={t} />
+                        <br />
+                      </span>
+                    );
+                  } else if (t === "/shake") {
+                    return <Effect fn={shake} key={i} />;
+                  } else
+                    return (
+                      <span key={i} className="digital">
+                        {t}
+                      </span>
+                    );
+                })
+              ) : (
+                "스크립트 끗"
+              )}
               {index % 2 === 1 && (
                 <span className="digital">
                   {["가람이", "나람이", "다람이", "라람이"][teamIndex % 4]}는 어떻게 할까?
@@ -125,7 +130,7 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp
                   ))}
                 </div>
               </>
-            ) : "attack" in script[index] ? (
+            ) : !isEnd && "attack" in script[index] ? (
               <>
                 <div className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</div>
               </>
