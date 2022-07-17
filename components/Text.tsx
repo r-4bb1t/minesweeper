@@ -104,7 +104,6 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp
                             }
                           : () => {
                               setIndex(script[index].next || 0);
-                              nextTeam();
                             }
                       }
                     >

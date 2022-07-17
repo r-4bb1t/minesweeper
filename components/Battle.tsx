@@ -19,6 +19,10 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
   const [isAttacked, setIsAttacked] = useState([false, false, false, false]);
 
   useEffect(() => {
+    setTeamIndex(0);
+  }, [index]);
+
+  useEffect(() => {
     setIsEnemyAttacked(true);
     setTimeout(() => {
       setIsEnemyAttacked(false);
@@ -65,7 +69,11 @@ const Battle = ({ hps, setHps, endBattle }: BattleProps) => {
         <div className="w-full grid grid-cols-4 bg-slate-200">
           {[1, 2, 3, 4].map((a, i) => (
             <div
-              className={cc(["aspect-square w-full relative", index % 2 === 1 && teamIndex === i && "bg-slate-300"])}
+              className={cc([
+                "aspect-square w-full relative",
+                index % 2 === 1 && teamIndex === i && "bg-slate-300",
+                hps[i] <= 0 && "opacity-20",
+              ])}
               key={a}
             >
               <div
