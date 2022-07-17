@@ -76,28 +76,30 @@ const Text = ({ shake, index, setIndex, teamIndex, nextTeam, options }: TextProp
           {index % 2 === 1 && (
             <>
               <div className="h-2"></div>
-              {options.map((o: number, i: number) => (
-                <div
-                  className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
-                  key={i}
-                  onClick={teamIndex < 3 ? nextTeam : () => setIndex(script[index].next || 0)}
-                >
-                  {">"} {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
-                  {(optionscript[o].attack > 0 || optionscript[o].heal > 0 || optionscript[o].defence > 0) && (
-                    <>
-                      {optionscript[o].attack > 0 && (
-                        <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
-                      )}
-                      {optionscript[o].heal > 0 && (
-                        <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
-                      )}
-                      {optionscript[o].defence > 0 && (
-                        <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
+              <div className="flex flex-col gap-3 md:gap-0">
+                {options.map((o: number, i: number) => (
+                  <div
+                    className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
+                    key={i}
+                    onClick={teamIndex < 3 ? nextTeam : () => setIndex(script[index].next || 0)}
+                  >
+                    {">"} {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
+                    {(optionscript[o].attack > 0 || optionscript[o].heal > 0 || optionscript[o].defence > 0) && (
+                      <>
+                        {optionscript[o].attack > 0 && (
+                          <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+                        )}
+                        {optionscript[o].heal > 0 && (
+                          <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+                        )}
+                        {optionscript[o].defence > 0 && (
+                          <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
             </>
           )}
         </WindupChildren>
