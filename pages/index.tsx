@@ -272,7 +272,7 @@ const Home: NextPage = () => {
           />
         )}
         {isAllyOpen !== -1 && (
-          <AllyModal setAllies={setAllies} newAlly={isAllyOpen} close={() => setIsAllyOpen(false)} />
+          <AllyModal setAllies={setAllies} newAlly={isAllyOpen} close={() => setIsAllyOpen(-1)} />
         )}
         {gameOver && (
           <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
