@@ -1,18 +1,22 @@
 [
   {
     "id": 0,
-    "name": "가람"
+    "name": "가람",
+    "src": "/assets/team1.gif"
   },
   {
     "id": 1,
-    "name": "나람"
+    "name": "나람",
+    "src": "/assets/team2.gif"
   },
   {
     "id": 2,
-    "name": "다람"
+    "name": "다람",
+    "src": "/assets/team3.gif"
   },
   {
     "id": 3,
-    "name": "라람"
+    "name": "라람",
+    "src": "/assets/team4.gif"
   }
 ]

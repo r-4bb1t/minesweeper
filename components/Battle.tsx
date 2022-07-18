@@ -3,6 +3,7 @@ import cc from "classcat";
 import Text from "./Text";
 import script from "../scripts/script.json";
 import enemy_attack from "../scripts/enemy_attack.json";
+import allies_info from "../scripts/allies_info.json";
 import { motion } from "framer-motion";
 
 interface BattleProps {
@@ -52,7 +53,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver }: BattleProps) => {
   }, [isAttacked]);
 
   useEffect(() => {
-    if (!("attack" in script[index])) return;
+    if (!("attack" in script[index]) || enemyHp <= 0) return;
     const attacks = enemy_attack[script[index].attack!].attack;
     const newAttacked = Array.from(isAttacked);
     const randomAttack = attacks[Math.floor(Math.random() * attacks.length)];
@@ -105,7 +106,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver }: BattleProps) => {
               ></div>
               <div className="absolute inset-2">
                 <img
-                  src={`/assets/team${a}.gif`}
+                  src={allies_info[a].src}
                   className={cc(["object-contain z-[3000]", isAttacked[i] && "animate-pulse"])}
                 />
               </div>

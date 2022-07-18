@@ -1,4 +1,4 @@
-@import url("//cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css");
+/* @import url("//cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css"); */
 
 @font-face {
   font-family: "DungGeunMo";
@@ -9,17 +9,17 @@
 
 * {
   box-sizing: border-box;
-  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
-    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  font-family: "DungGeunMo", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue",
+    "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
 
 html {
   overflow: hidden;
 }
 
-.digital {
+/* .digital {
   font-family: "DungGeunMo";
-}
+} */
 
 .keep-all {
   word-break: keep-all;

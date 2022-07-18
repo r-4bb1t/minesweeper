@@ -148,6 +148,7 @@ const Home: NextPage = () => {
     initMo[a[0][0]][a[0][1]] = true;
     if (mp[a[0][0]][a[0][1]] === CELL.monster) {
       setIsEffect(true);
+      setIsPlaying(false);
       setTimeout(() => {
         setIsBattle(true);
         setIsEffect(false);
@@ -156,6 +157,7 @@ const Home: NextPage = () => {
 
     if (mp[a[0][0]][a[0][1]] === CELL.ally) {
       //setIsEffect(true);
+      setIsPlaying(false);
       setTimeout(() => {
         setIsAllyOpen(Math.floor(Math.random() * (allies_info.length - 1)));
         //setIsEffect(false);
@@ -269,7 +271,9 @@ const Home: NextPage = () => {
             gameOver={() => setGameOver(true)}
           />
         )}
-        {isAllyOpen !== -1 && <AllyModal setAllies={setAllies} />}
+        {isAllyOpen !== -1 && (
+          <AllyModal setAllies={setAllies} newAlly={isAllyOpen} close={() => setIsAllyOpen(false)} />
+        )}
         {gameOver && (
           <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
             <motion.div
