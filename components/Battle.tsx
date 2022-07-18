@@ -15,19 +15,20 @@ interface BattleProps {
 const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
   const [index, setIndex] = useState(0);
-  const [teamIndex, setTeamIndex] = useState(0);
+  const [teamIndex, setTeamIndex] = useState(-1);
   const [enemyHp, setEnemyHp] = useState(50);
   const [isEnemyAttacked, setIsEnemyAttacked] = useState(false);
   const [isAttacked, setIsAttacked] = useState([false, false, false, false]);
   const [myTurn, setMyTurn] = useState(false);
 
   useEffect(() => {
-    setTeamIndex(0);
+    setTeamIndex(-1);
     setMyTurn(index % 2 === 1);
   }, [index]);
 
   useEffect(() => {
     if (myTurn && enemyHp <= 0) endBattle();
+    if (myTurn) setTeamIndex(0);
   }, [myTurn]);
 
   useEffect(() => {
