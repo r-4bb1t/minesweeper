@@ -30,4 +30,4 @@ const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
   );
 };
 
-export default React.memo(AllyModal);
+export default React.memo(AllyModal, () => false);
