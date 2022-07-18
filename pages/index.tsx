@@ -42,7 +42,7 @@ const Home: NextPage = () => {
   const [mo, setMo] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => false)));
   const [mm, setMm] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
 
-  const [hps, setHps] = useState([50, 50, 50, 50]);
+  const [hps, setHps] = useState([50]);
 
   const [isEffect, setIsEffect] = useState(false);
 
@@ -156,7 +156,7 @@ const Home: NextPage = () => {
     if (mp[a[0][0]][a[0][1]] === CELL.ally) {
       //setIsEffect(true);
       setTimeout(() => {
-        setIsAllyOpen(Math.floor(Math.random() * allies_info.length - 1));
+        setIsAllyOpen(Math.floor(Math.random() * (allies_info.length - 1)));
         //setIsEffect(false);
       }, 1000);
     }
@@ -203,6 +203,15 @@ const Home: NextPage = () => {
     }
     setIsPlaying(false);
   }, [mo, isBattle, isAllyOpen]);
+
+  useEffect(() => {
+    if (!isBattle) {
+      const newAllies = allies.filter((_, i) => hps[i] > 0);
+      const newHps = hps.filter((h) => h > 0);
+      setHps(newHps);
+      setAllies(newAllies);
+    }
+  }, [isBattle]);
 
   return (
     <>

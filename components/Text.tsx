@@ -16,6 +16,8 @@ interface TextProps {
   setEnemyHp: (a: number | any) => void;
   isEnd: boolean;
   allies: number[];
+  gaps: number[];
+  hps: number[];
 }
 
 const Options = ({
@@ -80,17 +82,25 @@ const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => 
   );
 };
 
-const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, setEnemyHp, allies }: TextProps) => {
+const Text = ({
+  isEnd,
+  shake,
+  index,
+  setIndex,
+  teamIndex,
+  nextTeam,
+  options,
+  setEnemyHp,
+  allies,
+  gaps,
+  hps,
+}: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsFinished(false);
   }, [index]);
-
-  useEffect(() => {
-    console.log(teamIndex);
-  }, [teamIndex]);
 
   useEffect(() => {
     const interval = setInterval(
@@ -112,57 +122,89 @@ const Text = ({ isEnd, shake, index, setIndex, teamIndex, nextTeam, options, set
         ])}
         ref={textRef}
       >
-        <WindupChildren onFinished={() => setIsFinished(true)}>
-          <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
-          <Pace ms={50}>
-            {isEnd ? (
-              <span className="digital">양이 쓰러졌다.</span>
-            ) : script[index] ? (
-              script[index].texts.map((t, i) => {
-                if (typeof t === "number") {
-                  return (
-                    <span key={i}>
-                      <Pause ms={t} />
-                      <br />
-                    </span>
-                  );
-                } else if (t === "/shake") {
-                  return <Effect fn={shake} key={i} />;
-                } else
-                  return (
-                    <span key={i} className="digital">
-                      {t}
-                    </span>
-                  );
-              })
+        {(!isEnd || !(index % 2 === 1)) && (
+          <WindupChildren onFinished={() => setIsFinished(true)}>
+            <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
+            <Pace ms={50}>
+              {isEnd ? (
+                <span className="digital">양이 쓰러졌다.</span>
+              ) : script[index] ? (
+                script[index].texts.map((t, i) => {
+                  if (typeof t === "number") {
+                    return (
+                      <span key={`span${i}`}>
+                        <Pause ms={t} />
+                        <br />
+                      </span>
+                    );
+                  } else if (t === "/shake") {
+                    return <Effect fn={shake} key={`shake${i}`} />;
+                  } else
+                    return (
+                      <span key={`_span${i}`} className="digital">
+                        {t}
+                      </span>
+                    );
+                })
+              ) : (
+                "스크립트 끗"
+              )}
+              {index % 2 === 1 && (
+                <span className="digital">{allies_info[allies[teamIndex]].name}은(는) 어떻게 할까?</span>
+              )}
+            </Pace>
+            {index % 2 === 1 ? (
+              <>
+                <div className="h-2"></div>
+                <div className="flex flex-col gap-3 md:gap-0">
+                  <Options
+                    index={index}
+                    teamIndex={teamIndex}
+                    nextTeam={nextTeam}
+                    setIndex={setIndex}
+                    options={options}
+                    allies={allies}
+                    setEnemyHp={setEnemyHp}
+                  />
+                </div>
+              </>
+            ) : !isEnd && "attack" in script[index] ? (
+              <>
+                <span className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</span>
+                {allies.map((ally, i) => (
+                  <>
+                    {gaps[i] ? (
+                      <>
+                        <br key={`br${i}`} />
+                        <span key={`span${i}`} className="digital">
+                          {allies_info[ally].name}은 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}했다.
+                        </span>
+                      </>
+                    ) : null}
+                    {hps[i] <= 0 ? (
+                      <>
+                        <br key={`_br${i}`} />
+                        <span key={`_span${i}`} className="digital">
+                          {allies_info[ally].name}는 쓰러졌다.
+                        </span>
+                      </>
+                    ) : null}
+                    {gaps.every((g) => g === 0) ? (
+                      <>
+                        <br key={`__br${i}`} />
+                        <span key={`__span${i}`} className="digital">
+                          아무 일도 일어나지 않았다.
+                        </span>
+                      </>
+                    ) : null}
+                  </>
+                ))}
+              </>
             ) : (
-              "스크립트 끗"
+              <></>
             )}
-            {index % 2 === 1 && (
-              <span className="digital">{allies_info[allies[teamIndex]].name}은(는) 어떻게 할까?</span>
-            )}
-          </Pace>
-          {index % 2 === 1 ? (
-            <>
-              <div className="h-2"></div>
-              <div className="flex flex-col gap-3 md:gap-0">
-                <Options
-                  index={index}
-                  teamIndex={teamIndex}
-                  nextTeam={nextTeam}
-                  setIndex={setIndex}
-                  options={options}
-                  allies={allies}
-                  setEnemyHp={setEnemyHp}
-                />
-              </div>
-            </>
-          ) : !isEnd && "attack" in script[index] ? (
-            <span className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</span>
-          ) : (
-            <></>
-          )}
-        </WindupChildren>
+          </WindupChildren>
+        )}
       </div>
     </div>
   );

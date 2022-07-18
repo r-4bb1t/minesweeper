@@ -18,17 +18,18 @@ const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
   const [teamIndex, setTeamIndex] = useState(-1);
   const [enemyHp, setEnemyHp] = useState(50);
   const [isEnemyAttacked, setIsEnemyAttacked] = useState(false);
-  const [isAttacked, setIsAttacked] = useState([false, false, false, false]);
+  const [isAttacked, setIsAttacked] = useState(Array.from({ length: hps.length }, () => false));
   const [myTurn, setMyTurn] = useState(false);
+  const [prevHps, setPrevHps] = useState(Array.from(hps));
 
   useEffect(() => {
-    setTeamIndex(-1);
+    if (index % 2 === 1) setTeamIndex(0);
+    else setTeamIndex(-1);
     setMyTurn(index % 2 === 1);
   }, [index]);
 
   useEffect(() => {
     if (myTurn && enemyHp <= 0) endBattle();
-    if (myTurn) setTeamIndex(0);
   }, [myTurn]);
 
   useEffect(() => {
@@ -54,8 +55,9 @@ const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
       if (randomAttack[i] > 0) newAttacked[i] = true;
       return hp - randomAttack[i];
     });
+    setPrevHps(hps);
+    setHps(newHps);
     setTimeout(() => {
-      setHps(newHps);
       setIsAttacked(newAttacked);
     }, 1000);
   }, [index]);
@@ -118,6 +120,8 @@ const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
           setEnemyHp={setEnemyHp}
           isEnd={enemyHp <= 0 && !myTurn}
           allies={allies}
+          gaps={prevHps.map((p, i) => hps[i] - p)}
+          hps={hps}
         />
       </motion.div>
     </div>
