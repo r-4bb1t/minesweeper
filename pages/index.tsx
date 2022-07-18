@@ -3,7 +3,7 @@ import Battle from "components/Battle";
 import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const dir = [
   [1, 0],
@@ -48,6 +48,7 @@ const Home: NextPage = () => {
 
   const [isBattle, setIsBattle] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const [allies, setAllies] = useState([0]);
   const [isAllyOpen, setIsAllyOpen] = useState(-1);
@@ -197,12 +198,12 @@ const Home: NextPage = () => {
   }, [ms]);
 
   useEffect(() => {
-    if (!isBattle && isAllyOpen === -1 && mo.some((m) => m.some((mm) => mm))) {
+    if (!isBattle && isAllyOpen === -1 && !gameOver && mo.some((m) => m.some((mm) => mm))) {
       setIsPlaying(true);
       return;
     }
     setIsPlaying(false);
-  }, [mo, isBattle, isAllyOpen]);
+  }, [mo, isBattle, isAllyOpen, gameOver]);
 
   useEffect(() => {
     if (!isBattle) {
@@ -259,8 +260,28 @@ const Home: NextPage = () => {
         </div>
       </div>
       <AnimatePresence>
-        {isBattle && <Battle endBattle={() => setIsBattle(false)} hps={hps} setHps={setHps} allies={allies} />}
-        {isAllyOpen !== -1 && <AllyModal />}
+        {isBattle && (
+          <Battle
+            endBattle={() => setIsBattle(false)}
+            hps={hps}
+            setHps={setHps}
+            allies={allies}
+            gameOver={() => setGameOver(true)}
+          />
+        )}
+        {isAllyOpen !== -1 && <AllyModal setAllies={setAllies} />}
+        {gameOver && (
+          <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0, y: 100, scale: 0.3 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+              className={"w-[300px] h-[200px] bg-white md:rounded-2xl flex flex-col items-center justify-center"}
+            >
+              <div className="font-bold text-2xl">게임오버!</div>
+            </motion.div>
+          </div>
+        )}
       </AnimatePresence>
     </>
   );

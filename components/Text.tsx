@@ -96,6 +96,7 @@ const Text = ({
   hps,
 }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
+  const [isDead, setIsDead] = useState(Array.from({ length: allies.length }, () => false));
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -111,6 +112,13 @@ const Text = ({
   }, [isFinished]);
 
   useEffect(() => console.log("Rerendered"));
+
+  useEffect(() => {
+    if (hps[teamIndex] <= 0) {
+      teamIndex < allies.length - 1 ? nextTeam() : setIndex(script[index].next || 0);
+      setIsDead((d) => d.map((_, i) => hps[i] <= 0));
+    }
+  }, [teamIndex]);
 
   return (
     <div className="w-full flex flex-col min-h-0 p-2 h-full max-h-full relative bg-black text-white md:rounded-b-xl flex-shrink">
@@ -173,19 +181,19 @@ const Text = ({
                 <span className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</span>
                 {allies.map((ally, i) => (
                   <>
-                    {gaps[i] ? (
+                    {gaps[i] && !isDead[i] ? (
                       <>
                         <br key={`br${i}`} />
                         <span key={`span${i}`} className="digital">
-                          {allies_info[ally].name}은 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}했다.
+                          {allies_info[ally].name}은(는) 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}했다.
                         </span>
                       </>
                     ) : null}
-                    {hps[i] <= 0 ? (
+                    {hps[i] <= 0 && !isDead[i] ? (
                       <>
                         <br key={`_br${i}`} />
                         <span key={`_span${i}`} className="digital">
-                          {allies_info[ally].name}는 쓰러졌다.
+                          {allies_info[ally].name}은(는) 쓰러졌다.
                         </span>
                       </>
                     ) : null}

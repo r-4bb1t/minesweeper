@@ -10,9 +10,10 @@ interface BattleProps {
   setHps: (a: number | any) => void;
   endBattle: () => void;
   allies: number[];
+  gameOver: () => void;
 }
 
-const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
+const Battle = ({ hps, setHps, endBattle, allies, gameOver }: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
   const [index, setIndex] = useState(0);
   const [teamIndex, setTeamIndex] = useState(-1);
@@ -26,6 +27,10 @@ const Battle = ({ hps, setHps, endBattle, allies }: BattleProps) => {
     if (index % 2 === 1) setTeamIndex(0);
     else setTeamIndex(-1);
     setMyTurn(index % 2 === 1);
+    if (hps.every((h) => h <= 0)) {
+      endBattle();
+      gameOver();
+    }
   }, [index]);
 
   useEffect(() => {
