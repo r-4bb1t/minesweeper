@@ -130,7 +130,7 @@ const Text = ({
         ])}
         ref={textRef}
       >
-        {(!isEnd || !(index % 2 === 1)) && (
+        {((!isEnd && index % 2 === 1) || index % 2 === 0) && (
           <WindupChildren onFinished={() => setIsFinished(true)}>
             <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
             <Pace ms={50}>

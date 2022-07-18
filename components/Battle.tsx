@@ -124,7 +124,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver }: BattleProps) => {
           teamIndex={teamIndex}
           nextTeam={() => setTeamIndex((i) => (i + 1) % allies.length)}
           setEnemyHp={setEnemyHp}
-          isEnd={enemyHp <= 0 && !myTurn}
+          isEnd={enemyHp <= 0}
           allies={allies}
           gaps={prevHps.map((p, i) => hps[i] - p)}
           hps={hps}

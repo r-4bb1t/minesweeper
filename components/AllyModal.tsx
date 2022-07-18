@@ -1,6 +1,6 @@
 import cc from "classcat";
 import { motion } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
 
 interface AllyModalProps {
@@ -10,7 +10,7 @@ interface AllyModalProps {
 }
 
 const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
-  const allyIndex = newAlly;
+  const [allyIndex] = useState(newAlly);
   useEffect(() => {
     setAllies((s: number[]) => [...s, newAlly]);
     setTimeout(close, 5000);
@@ -30,4 +30,4 @@ const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
   );
 };
 
-export default React.memo(AllyModal, () => false);
+export default React.memo(AllyModal, () => true);
