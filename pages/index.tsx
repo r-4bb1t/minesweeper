@@ -243,7 +243,7 @@ const Home: NextPage = () => {
                 ${mo[i][j] && cell === 1 && "mine-cell"}
                 ${mo[i][j] && cell === 2 && "item-cell"}
                 ${mo[i][j] && cell === 3 && "ally-cell"}
-                ${(!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "_text-transparent"}
+                ${(!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "text-transparent"}
                 `}
                   style={{ animationDelay: `${(i + j) / 10}s` }}
                   onContextMenu={(e) => {
@@ -255,8 +255,8 @@ const Home: NextPage = () => {
                     open(i, j);
                   }}
                 >
-                  {[ms[i][j].count, "!", "♥", "🥰"][cell]}
-                  {/*  {mo[i][j] ? [ms[i][j].count, "!", "♥", "🥰"][cell] : "."} */}
+                  {/* {[ms[i][j].count, "!", "♥", "🥰"][cell]} */}
+                  {mo[i][j] ? [ms[i][j].count, "!", "♥", "🥰"][cell] : "."}
                 </div>
                 {!mo[i][j] && mm[i][j] > 0 && (
                   <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center pointer-events-none">
