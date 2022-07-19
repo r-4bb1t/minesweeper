@@ -10,6 +10,10 @@ interface AllyModalProps {
 }
 
 const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
+  useEffect(() => {
+    setAllies();
+    setTimeout(close, 5000);
+  }, []);
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
       <motion.div
