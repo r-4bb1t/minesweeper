@@ -25,6 +25,8 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
   const [myTurn, setMyTurn] = useState(false);
   const [prevHps, setPrevHps] = useState(Array.from(hps));
 
+  const [flag, setFlag] = useState(true);
+
   useEffect(() => {
     if (index % 2 === 1) setTeamIndex(0);
     else setTeamIndex(-1);
@@ -36,7 +38,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
   }, [index]);
 
   useEffect(() => {
-    if (myTurn && enemyHp <= 0) endBattle();
+    if (!flag && enemyHp <= 0) endBattle();
   }, [myTurn]);
 
   useEffect(() => {
@@ -125,10 +127,12 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
           teamIndex={teamIndex}
           nextTeam={() => setTeamIndex((i) => (i + 1) % allies.length)}
           setEnemyHp={setEnemyHp}
-          isEnd={index % 2 === 0 && enemyHp <= 0}
+          isEnd={enemyHp <= 0}
           allies={allies}
           gaps={prevHps.map((p, i) => hps[i] - p)}
           hps={hps}
+          flag={flag}
+          setFlag={setFlag}
         />
       </motion.div>
     </div>

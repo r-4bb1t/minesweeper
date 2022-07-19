@@ -10,11 +10,6 @@ interface AllyModalProps {
 }
 
 const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
-  const [allyIndex] = useState(newAlly);
-  useEffect(() => {
-    setAllies(allyIndex);
-    setTimeout(close, 5000);
-  }, []);
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
       <motion.div
@@ -23,8 +18,12 @@ const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
         exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
         className="w-full h-full max-w-[400px] md:h-[450px] bg-white md:rounded-2xl flex flex-col items-center"
       >
-        <img src={allies_info[allyIndex].src} className={"object-contain z-[3000]"} />
-        <div>{allies_info[allyIndex].name}이(가) 새 동료가 되었다!</div>
+        {newAlly !== -1 && (
+          <>
+            <img src={allies_info[newAlly].src} className={"object-contain z-[3000]"} />
+            <div>{allies_info[newAlly].name}이(가) 새 동료가 되었다!</div>
+          </>
+        )}
       </motion.div>
     </div>
   );

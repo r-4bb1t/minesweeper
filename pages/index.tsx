@@ -144,9 +144,9 @@ const Home: NextPage = () => {
   };
 
   const open = (xx: number, yy: number) => {
-    if (!isPlaying) return;
     const a = [[xx, yy]];
     const initMo = Array.from(mo);
+    if (!isPlaying || mo[a[0][0]][a[0][1]]) return;
     initMo[a[0][0]][a[0][1]] = true;
     if (mp[a[0][0]][a[0][1]] === CELL.monster) {
       setIsEffect(true);
@@ -208,12 +208,12 @@ const Home: NextPage = () => {
   }, [ms]);
 
   useEffect(() => {
-    if (!isBattle && isAllyOpen === -1 && !gameOver && mo.some((m) => m.some((mm) => mm))) {
+    if (!isBattle && isAllyOpen === -1 && !gameOver) {
       setIsPlaying(true);
       return;
     }
     setIsPlaying(false);
-  }, [mo, isBattle, isAllyOpen, gameOver]);
+  }, [isBattle, isAllyOpen, gameOver]);
 
   useEffect(() => {
     if (!isBattle) {

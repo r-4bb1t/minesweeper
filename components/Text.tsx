@@ -18,6 +18,8 @@ interface TextProps {
   allies: number[];
   gaps: number[];
   hps: number[];
+  flag: boolean;
+  setFlag: (f: boolean) => void;
 }
 
 const Options = ({
@@ -71,13 +73,13 @@ const Options = ({
   ));
 };
 
-const SkipButton = ({ next, myTurn }: { next: () => void; myTurn: boolean }) => {
+const SkipButton = ({ isEnd, next, myTurn }: { isEnd: boolean; next: () => void; myTurn: boolean }) => {
   const skip = useSkip();
   const isFinished = useIsFinished();
   return (
     <div
-      onClick={isFinished && !myTurn ? next : skip}
-      className={`w-full h-full absolute top-0 left-0 ${myTurn && isFinished && "pointer-events-none"}`}
+      onClick={isFinished && (!myTurn || isEnd) ? next : skip}
+      className={cc(["w-full h-full absolute top-0 left-0", myTurn && !isEnd && isFinished && "pointer-events-none"])}
     />
   );
 };
@@ -94,6 +96,8 @@ const Text = ({
   allies,
   gaps,
   hps,
+  flag,
+  setFlag,
 }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const [isDead, setIsDead] = useState(Array.from({ length: allies.length }, () => false));
@@ -125,15 +129,26 @@ const Text = ({
       <div
         className={cc([
           "w-full px-8 py-4 max-h-full overflow-y-auto",
-          (!isFinished || script[index].next) && index % 2 !== 1 && "after-text",
+          (!isFinished || (script[index].next && (index % 2 === 0 || isEnd))) && flag && "after-text",
           !isFinished && "is-typing",
         ])}
         ref={textRef}
       >
-        {index}
-        {((!isEnd && index % 2 === 1) || index % 2 === 0) && (
+        {flag && (
           <WindupChildren onFinished={() => setIsFinished(true)}>
-            <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
+            <SkipButton
+              isEnd={isEnd}
+              next={() => {
+                if (script[index].next) {
+                  setIndex(script[index].next);
+                }
+                if (isEnd) {
+                  setIndex(0);
+                  setFlag(false);
+                }
+              }}
+              myTurn={index % 2 === 1}
+            />
             <Pace ms={50}>
               {isEnd ? (
                 <span className="digital">양이 쓰러졌다.</span>
@@ -155,9 +170,7 @@ const Text = ({
                       </span>
                     );
                 })
-              ) : (
-                "스크립트 끗"
-              )}
+              ) : null}
               <span className="hidden">{teamIndex}</span>
               {index % 2 === 1 && !isEnd && teamIndex >= 0 && (
                 <span className="digital">{allies_info[allies[teamIndex]].name}은(는) 어떻게 할까?</span>
@@ -210,9 +223,7 @@ const Text = ({
                     </>
                   ) : null}
                 </>
-              ) : (
-                <></>
-              )}
+              ) : null}
             </Pace>
           </WindupChildren>
         )}
