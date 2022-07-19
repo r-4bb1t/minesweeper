@@ -49,7 +49,7 @@ const Options = ({
             }
           : () => {
               setEnemyHp((s: number) => s - optionscript[o].attack);
-              setIndex(script[index].next || 0);
+              setIndex(script[index].next);
             }
       }
     >
@@ -130,6 +130,7 @@ const Text = ({
         ])}
         ref={textRef}
       >
+        {index}
         {((!isEnd && index % 2 === 1) || index % 2 === 0) && (
           <WindupChildren onFinished={() => setIsFinished(true)}>
             <SkipButton next={() => script[index].next && setIndex(script[index].next!)} myTurn={index % 2 === 1} />
@@ -157,60 +158,62 @@ const Text = ({
               ) : (
                 "스크립트 끗"
               )}
-              {index % 2 === 1 && (
+              <span className="hidden">{teamIndex}</span>
+              {index % 2 === 1 && !isEnd && teamIndex >= 0 && (
                 <span className="digital">{allies_info[allies[teamIndex]].name}은(는) 어떻게 할까?</span>
               )}
+              {index % 2 === 1 && !isEnd ? (
+                <>
+                  <div className="h-2"></div>
+                  <div className="flex flex-col gap-3 md:gap-0">
+                    <Options
+                      index={index}
+                      teamIndex={teamIndex}
+                      nextTeam={nextTeam}
+                      setIndex={setIndex}
+                      options={options}
+                      allies={allies}
+                      setEnemyHp={setEnemyHp}
+                    />
+                  </div>
+                </>
+              ) : !isEnd && "attack" in script[index] ? (
+                <>
+                  <span className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</span>
+                  {allies.map((ally, i) => (
+                    <>
+                      {gaps[i] && !isDead[i] ? (
+                        <>
+                          <br key={`br${i}`} />
+                          <span key={`span${i}`} className="digital">
+                            {allies_info[ally].name}은(는) 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}
+                            했다.
+                          </span>
+                        </>
+                      ) : null}
+                      {hps[i] <= 0 && !isDead[i] ? (
+                        <>
+                          <br key={`_br${i}`} />
+                          <span key={`_span${i}`} className="digital">
+                            {allies_info[ally].name}은(는) 쓰러졌다.
+                          </span>
+                        </>
+                      ) : null}
+                    </>
+                  ))}
+                  {gaps.every((g) => g === 0) ? (
+                    <>
+                      <br key={`__br`} />
+                      <span key={`__span`} className="digital">
+                        아무 일도 일어나지 않았다.
+                      </span>
+                    </>
+                  ) : null}
+                </>
+              ) : (
+                <></>
+              )}
             </Pace>
-            {index % 2 === 1 ? (
-              <>
-                <div className="h-2"></div>
-                <div className="flex flex-col gap-3 md:gap-0">
-                  <Options
-                    index={index}
-                    teamIndex={teamIndex}
-                    nextTeam={nextTeam}
-                    setIndex={setIndex}
-                    options={options}
-                    allies={allies}
-                    setEnemyHp={setEnemyHp}
-                  />
-                </div>
-              </>
-            ) : !isEnd && "attack" in script[index] ? (
-              <>
-                <span className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</span>
-                {allies.map((ally, i) => (
-                  <>
-                    {gaps[i] && !isDead[i] ? (
-                      <>
-                        <br key={`br${i}`} />
-                        <span key={`span${i}`} className="digital">
-                          {allies_info[ally].name}은(는) 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}했다.
-                        </span>
-                      </>
-                    ) : null}
-                    {hps[i] <= 0 && !isDead[i] ? (
-                      <>
-                        <br key={`_br${i}`} />
-                        <span key={`_span${i}`} className="digital">
-                          {allies_info[ally].name}은(는) 쓰러졌다.
-                        </span>
-                      </>
-                    ) : null}
-                    {gaps.every((g) => g === 0) ? (
-                      <>
-                        <br key={`__br${i}`} />
-                        <span key={`__span${i}`} className="digital">
-                          아무 일도 일어나지 않았다.
-                        </span>
-                      </>
-                    ) : null}
-                  </>
-                ))}
-              </>
-            ) : (
-              <></>
-            )}
           </WindupChildren>
         )}
       </div>
@@ -220,5 +223,6 @@ const Text = ({
 
 export default React.memo(
   Text,
-  (prevProps: TextProps, nextProps: TextProps) => prevProps.teamIndex === nextProps.teamIndex,
+  (prevProps: TextProps, nextProps: TextProps) =>
+    prevProps.teamIndex === nextProps.teamIndex && prevProps.isEnd === nextProps.isEnd,
 );

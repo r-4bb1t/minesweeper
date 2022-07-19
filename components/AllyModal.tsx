@@ -12,7 +12,7 @@ interface AllyModalProps {
 const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
   const [allyIndex] = useState(newAlly);
   useEffect(() => {
-    setAllies((s: number[]) => [...s, newAlly]);
+    setAllies(allyIndex);
     setTimeout(close, 5000);
   }, []);
   return (

@@ -12,9 +12,10 @@ interface BattleProps {
   endBattle: () => void;
   allies: number[];
   gameOver: () => void;
+  options: number[][];
 }
 
-const Battle = ({ hps, setHps, endBattle, allies, gameOver }: BattleProps) => {
+const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
   const [index, setIndex] = useState(0);
   const [teamIndex, setTeamIndex] = useState(-1);
@@ -120,11 +121,11 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver }: BattleProps) => {
           }}
           index={index}
           setIndex={setIndex}
-          options={[0, 1, 2, 3]}
+          options={options[teamIndex]}
           teamIndex={teamIndex}
           nextTeam={() => setTeamIndex((i) => (i + 1) % allies.length)}
           setEnemyHp={setEnemyHp}
-          isEnd={enemyHp <= 0}
+          isEnd={index % 2 === 0 && enemyHp <= 0}
           allies={allies}
           gaps={prevHps.map((p, i) => hps[i] - p)}
           hps={hps}

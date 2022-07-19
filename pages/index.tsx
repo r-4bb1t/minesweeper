@@ -4,6 +4,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
 import { AnimatePresence, motion } from "framer-motion";
+import { join } from "path";
 
 const dir = [
   [1, 0],
@@ -43,6 +44,7 @@ const Home: NextPage = () => {
   const [mm, setMm] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
 
   const [hps, setHps] = useState([50]);
+  const [options, setOptions] = useState([[0, 1]]);
 
   const [isEffect, setIsEffect] = useState(false);
 
@@ -187,6 +189,12 @@ const Home: NextPage = () => {
     setMm(newMm);
   };
 
+  const newAllies = (i: number) => {
+    setAllies((a) => [...a, i]);
+    setHps((h) => [...h, 50]);
+    setOptions((o) => [...o, [0, 1]]);
+  };
+
   useEffect(() => {
     setMap();
   }, []);
@@ -235,7 +243,7 @@ const Home: NextPage = () => {
                 ${mo[i][j] && cell === 1 && "mine-cell"}
                 ${mo[i][j] && cell === 2 && "item-cell"}
                 ${mo[i][j] && cell === 3 && "ally-cell"}
-                ${(!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "text-transparent"}
+                ${(!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "_text-transparent"}
                 `}
                   style={{ animationDelay: `${(i + j) / 10}s` }}
                   onContextMenu={(e) => {
@@ -247,7 +255,8 @@ const Home: NextPage = () => {
                     open(i, j);
                   }}
                 >
-                  {mo[i][j] ? [ms[i][j].count, "!", "♥", "🥰"][cell] : "."}
+                  {[ms[i][j].count, "!", "♥", "🥰"][cell]}
+                  {/*  {mo[i][j] ? [ms[i][j].count, "!", "♥", "🥰"][cell] : "."} */}
                 </div>
                 {!mo[i][j] && mm[i][j] > 0 && (
                   <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center pointer-events-none">
@@ -268,12 +277,11 @@ const Home: NextPage = () => {
             hps={hps}
             setHps={setHps}
             allies={allies}
+            options={options}
             gameOver={() => setGameOver(true)}
           />
         )}
-        {isAllyOpen !== -1 && (
-          <AllyModal setAllies={setAllies} newAlly={isAllyOpen} close={() => setIsAllyOpen(-1)} />
-        )}
+        {isAllyOpen !== -1 && <AllyModal setAllies={newAllies} newAlly={isAllyOpen} close={() => setIsAllyOpen(-1)} />}
         {gameOver && (
           <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
             <motion.div
