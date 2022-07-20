@@ -39,7 +39,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
 
   useEffect(() => {
     if (!flag && enemyHp <= 0) endBattle();
-  }, [myTurn]);
+  }, [flag]);
 
   useEffect(() => {
     setIsEnemyAttacked(true);
