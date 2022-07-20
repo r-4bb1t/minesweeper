@@ -11,7 +11,7 @@ interface AllyModalProps {
 
 const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
   useEffect(() => {
-    setAllies();
+    setAllies(newAlly);
     setTimeout(close, 5000);
   }, []);
   return (
@@ -33,4 +33,4 @@ const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
   );
 };
 
-export default React.memo(AllyModal, () => true);
+export default AllyModal;

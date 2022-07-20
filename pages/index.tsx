@@ -4,7 +4,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
 import { AnimatePresence, motion } from "framer-motion";
-import { join } from "path";
+import cc from "classcat";
 
 const dir = [
   [1, 0],
@@ -115,7 +115,8 @@ const Home: NextPage = () => {
           if (i + dir[k][0] < 0 || i + dir[k][0] >= sz || j + dir[k][1] < 0 || j + dir[k][1] >= sz) continue;
           if (mp[i + dir[k][0]][j + dir[k][1]] !== CELL.none) {
             f++;
-            if (mp[i + dir[k][0]][j + dir[k][1]] === CELL.item) h = true;
+            if (mp[i + dir[k][0]][j + dir[k][1]] === CELL.item || mp[i + dir[k][0]][j + dir[k][1]] === CELL.ally)
+              h = true;
           }
         }
         initMs[i][j] = { count: f, hasItem: h };
@@ -237,14 +238,15 @@ const Home: NextPage = () => {
                 key={i * 10000 + j}
               >
                 <div
-                  className={`w-full h-full flex items-center justify-center font-bold
-                cell
-                ${mo[i][j] && "opened-cell"}
-                ${mo[i][j] && cell === 1 && "mine-cell"}
-                ${mo[i][j] && cell === 2 && "item-cell"}
-                ${mo[i][j] && cell === 3 && "ally-cell"}
-                ${(!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "text-transparent"}
-                `}
+                  className={cc([
+                    "w-full h-full flex items-center justify-center font-bold cell",
+                    ms[i][j].hasItem && cell === 0 && "text-blue-400",
+                    mo[i][j] && "opened-cell",
+                    mo[i][j] && cell === 1 && "mine-cell",
+                    mo[i][j] && cell === 2 && "item-cell",
+                    mo[i][j] && cell === 3 && "ally-cell",
+                    (!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "text-transparent",
+                  ])}
                   style={{ animationDelay: `${(i + j) / 10}s` }}
                   onContextMenu={(e) => {
                     e.preventDefault();
