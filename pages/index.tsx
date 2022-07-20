@@ -220,8 +220,10 @@ const Home: NextPage = () => {
     if (!isBattle) {
       const newAllies = allies.filter((_, i) => hps[i] > 0);
       const newHps = hps.filter((h) => h > 0);
+      const newOptions = options.filter((_, i) => hps[i] > 0);
       setHps(newHps);
       setAllies(newAllies);
+      setOptions(newOptions);
     }
   }, [isBattle]);
 
