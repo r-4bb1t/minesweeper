@@ -191,6 +191,7 @@ const Home: NextPage = () => {
   };
 
   const newAllies = (i: number) => {
+    if (allies.length > 3) return;
     setAllies((a) => [...a, i]);
     setHps((h) => [...h, 50]);
     setOptions((o) => [...o, [0, 1]]);
@@ -285,7 +286,14 @@ const Home: NextPage = () => {
             gameOver={() => setGameOver(true)}
           />
         )}
-        {isAllyOpen !== -1 && <AllyModal setAllies={newAllies} newAlly={isAllyOpen} close={() => setIsAllyOpen(-1)} />}
+        {isAllyOpen !== -1 && (
+          <AllyModal
+            setAllies={newAllies}
+            ok={allies.length <= 3}
+            newAlly={isAllyOpen}
+            close={() => setIsAllyOpen(-1)}
+          />
+        )}
         {gameOver && (
           <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
             <motion.div

@@ -7,9 +7,10 @@ interface AllyModalProps {
   setAllies: Function;
   newAlly: number;
   close: () => void;
+  ok: boolean;
 }
 
-const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
+const AllyModal = ({ setAllies, newAlly, close, ok }: AllyModalProps) => {
   useEffect(() => {
     setAllies(newAlly);
     setTimeout(close, 5000);
@@ -20,12 +21,16 @@ const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
         initial={{ opacity: 0, y: 100, scale: 0.3 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-        className="w-full h-full max-w-[400px] md:h-[450px] bg-white md:rounded-2xl flex flex-col items-center"
+        className="w-full max-w-[400px] h-[450px] bg-white md:rounded-2xl flex flex-col items-center"
       >
         {newAlly !== -1 && (
           <>
             <img src={allies_info[newAlly].src} className={"object-contain z-[3000]"} />
-            <div>{allies_info[newAlly].name}이(가) 새 동료가 되었다!</div>
+            {ok ? (
+              <div>{allies_info[newAlly].name}이(가) 새 동료가 되었다!</div>
+            ) : (
+              <div>{allies_info[newAlly].name}이(가) 찾아왔으나 자리가 없어 돌아갔다.</div>
+            )}
           </>
         )}
       </motion.div>
@@ -33,4 +38,4 @@ const AllyModal = ({ setAllies, newAlly, close }: AllyModalProps) => {
   );
 };
 
-export default AllyModal;
+export default React.memo(AllyModal, (p, n) => p.newAlly === n.newAlly);
