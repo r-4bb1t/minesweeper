@@ -3,6 +3,7 @@ import Battle from "components/Battle";
 import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
+import optionscript from "../scripts/options.json";
 import { AnimatePresence, motion } from "framer-motion";
 import cc from "classcat";
 
@@ -231,9 +232,61 @@ const Home: NextPage = () => {
   return (
     <>
       <div
-        className={`w-screen h-screen flex items-center justify-center p-3 bg-blue-200 ${isEffect && "animate-scale"}`}
+        className={`w-screen h-screen overflow-y-auto flex flex-col items-center p-3 bg-blue-200 gap-16 ${
+          isEffect && "animate-scale"
+        }`}
       >
-        <div className="w-full max-w-[700px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
+        <div className="w-full h-16 flex flex-col items-center gap-1">
+          나의 동료들
+          <div className="w-64 h-16 grid grid-cols-4 gap-1">
+            {[...Array(4)].map((_, i) => {
+              return allies.length > i ? (
+                <div className="aspect-square w-full relative bg-slate-200 group" key={i}>
+                  <div
+                    className={cc([
+                      "absolute inset-2 top-auto bg-red-500 bg-opacity-40",
+                      hps[i] > 10 && "bg-yellow-400",
+                      hps[i] > 30 && "bg-green-400",
+                    ])}
+                    style={{ height: `calc(${(hps[i] / 50) * 100}% - 1rem)` }}
+                  ></div>
+                  <div className="absolute inset-2">
+                    <img src={allies_info[allies[i]].src} className="object-contain z-[3000]" />
+                  </div>
+                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-slate-900 bg-opacity-60 p-3 z-[5000] text-white">
+                    {allies_info[allies[i]].name}의 스킬
+                    {options[i].map(
+                      (o, i) =>
+                        o !== 0 && (
+                          <div key={i} className="whitespace-nowrap">
+                            {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
+                            {(optionscript[o].attack > 0 ||
+                              optionscript[o].heal > 0 ||
+                              optionscript[o].defence > 0) && (
+                              <>
+                                {optionscript[o].attack > 0 && (
+                                  <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+                                )}
+                                {optionscript[o].heal > 0 && (
+                                  <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+                                )}
+                                {optionscript[o].defence > 0 && (
+                                  <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        ),
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="aspect-square w-full relative bg-slate-200" key={i}></div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
               <div
