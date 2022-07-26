@@ -51,6 +51,12 @@ module.exports = {
         shake: "shake .3s cubic-bezier(.36,.07,.19,.97) both",
         scale: "scale 1s cubic-bezier(.36,.07,.19,.97)",
       },
+      colors: {
+        "hp-good": "#54e154",
+        "hp-warn": "#ede47d",
+        "hp-danger": "#ed7d7d",
+        "enemy-hp": "#cf003d",
+      },
     },
   },
   daisyui: {

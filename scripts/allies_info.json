@@ -2,21 +2,25 @@
   {
     "id": 0,
     "name": "가람",
-    "src": "/assets/team1.gif"
+    "src": "/assets/team1.gif",
+    "face":"/assets/faces/team1.png"
   },
   {
     "id": 1,
     "name": "나람",
-    "src": "/assets/team2.gif"
+    "src": "/assets/team2.gif",
+    "face":"/assets/faces/team2.png"
   },
   {
     "id": 2,
     "name": "다람",
-    "src": "/assets/team3.gif"
+    "src": "/assets/team3.gif",
+    "face":"/assets/faces/team3.png"
   },
   {
     "id": 3,
     "name": "라람",
-    "src": "/assets/team4.gif"
+    "src": "/assets/team0.gif",
+    "face":"/assets/faces/team4.png"
   }
 ]

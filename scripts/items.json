@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "title": "돌멩이",
+    "src": "rock.png",
+    "attack": 15,
+    "heal": 0,
+    "defence": 0
+  },
+  {
+    "id": 1,
+    "title": "회복 물약",
+    "src": "potion.png",
+    "attack": 0,
+    "heal": 10,
+    "defence": 0
+  }
+]

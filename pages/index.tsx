@@ -4,6 +4,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
 import optionscript from "../scripts/options.json";
+import itemscript from "../scripts/items.json";
 import { AnimatePresence, motion } from "framer-motion";
 import cc from "classcat";
 
@@ -52,6 +53,7 @@ const Home: NextPage = () => {
   const [isBattle, setIsBattle] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [items, setItems] = useState([] as { id: number; cnt: number }[]);
 
   const [allies, setAllies] = useState([0]);
   const [isAllyOpen, setIsAllyOpen] = useState(-1);
@@ -150,6 +152,7 @@ const Home: NextPage = () => {
     const initMo = Array.from(mo);
     if (!isPlaying || mo[a[0][0]][a[0][1]]) return;
     initMo[a[0][0]][a[0][1]] = true;
+
     if (mp[a[0][0]][a[0][1]] === CELL.monster) {
       setIsEffect(true);
       setIsPlaying(false);
@@ -163,9 +166,21 @@ const Home: NextPage = () => {
       //setIsEffect(true);
       setIsPlaying(false);
       setTimeout(() => {
-        setIsAllyOpen(Math.floor(Math.random() * (allies_info.length - 1)));
+        setIsAllyOpen(Math.floor(Math.random() * allies_info.length));
         //setIsEffect(false);
       }, 1000);
+    }
+
+    if (mp[a[0][0]][a[0][1]] === CELL.item) {
+      const newItem = Math.floor(Math.random() * itemscript.length);
+      if (items.some((item) => item.id === newItem))
+        setItems((items) =>
+          items.map((i) => {
+            if (i.id === newItem) i.cnt++;
+            return i;
+          }),
+        );
+      else setItems((items) => [...items, { id: newItem, cnt: 1 }]);
     }
 
     if (mp[a[0][0]][a[0][1]] === 0 && ms[a[0][0]][a[0][1]].count === 0)
@@ -232,26 +247,29 @@ const Home: NextPage = () => {
   return (
     <>
       <div
-        className={`w-screen h-screen overflow-y-auto flex flex-col items-center p-3 bg-blue-200 gap-16 ${
+        className={`w-screen h-screen overflow-y-auto flex flex-col justify-center items-center p-3 bg-blue-200 gap-5 ${
           isEffect && "animate-scale"
         }`}
       >
-        <div className="w-full h-16 flex flex-col items-center gap-1">
-          나의 동료들
-          <div className="w-64 h-16 grid grid-cols-4 gap-1">
+        <div className="w-screen h-screen fixed inset-0 pointer-events-none z-[100000] opacity-5 bg-blend-screen _bg-[url(/assets/noise.gif)] bg-repeat" />
+        <div className="w-full h-16 flex flex-col items-center gap-1 mt-4">
+          <div className="w-64 h-16 grid grid-cols-4">
             {[...Array(4)].map((_, i) => {
               return allies.length > i ? (
-                <div className="aspect-square w-full relative bg-slate-200 group" key={i}>
+                <div className="aspect-square w-full relative group" key={i}>
                   <div
                     className={cc([
-                      "absolute inset-2 top-auto bg-red-500 bg-opacity-40",
-                      hps[i] > 10 && "bg-yellow-400",
-                      hps[i] > 30 && "bg-green-400",
+                      "absolute inset-2 top-auto bg-hp-danger",
+                      hps[i] > 10 && "bg-hp-warn",
+                      hps[i] > 30 && "bg-hp-good",
                     ])}
                     style={{ height: `calc(${(hps[i] / 50) * 100}% - 1rem)` }}
                   ></div>
                   <div className="absolute inset-2">
-                    <img src={allies_info[allies[i]].src} className="object-contain z-[3000]" />
+                    <img src={allies_info[allies[i]].face} className="w-full h-full object-cover z-[3000]" />
+                  </div>
+                  <div className="absolute">
+                    <img src="/assets/frame.png" className="object-contain z-[3000]" />
                   </div>
                   <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-slate-900 bg-opacity-60 p-3 z-[5000] text-white">
                     {allies_info[allies[i]].name}의 스킬
@@ -281,12 +299,63 @@ const Home: NextPage = () => {
                   </div>
                 </div>
               ) : (
-                <div className="aspect-square w-full relative bg-slate-200" key={i}></div>
+                <div className="aspect-square w-full relative" key={i}>
+                  <div className="absolute inset-2 bg-slate-200" />
+                  <img src="/assets/frame.png" className="absolute inset-0 w-full h-full]" />
+                </div>
               );
             })}
           </div>
         </div>
-        <div className="w-full max-w-[600px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
+        <div className="w-full flex flex-col items-center gap-1">
+          <div className="w-fit grid grid-cols-10 gap-1">
+            {[...Array(10)].map((_, i) => {
+              return items[i] ? (
+                <div className="w-8 h-8 relative group" key={i}>
+                  <div className="absolute inset-1 bg-slate-200" />
+                  <div className="absolute inset-0">
+                    <img
+                      src={`/assets/items/${itemscript[items[i].id].src}`}
+                      className="w-full h-full object-contain z-[3000]"
+                    />
+                  </div>
+                  <div className="absolute bottom-1 right-1 text-sm w-4 h-4 items-center justify-center flex">
+                    {items[i].cnt}
+                  </div>
+                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-slate-900 bg-opacity-60 p-3 z-[5000] text-white whitespace-nowrap">
+                    {itemscript[items[i].id].title}의 효과
+                    <br />
+                    {(itemscript[items[i].id].attack > 0 ||
+                      itemscript[items[i].id].heal > 0 ||
+                      itemscript[items[i].id].defence > 0) && (
+                      <>
+                        {itemscript[items[i].id].attack > 0 && (
+                          <span className="text-red-400 digital text-sm"> {itemscript[items[i].id].attack} 공격</span>
+                        )}
+                        {itemscript[items[i].id].heal > 0 && (
+                          <span className="text-green-400 digital text-sm"> {itemscript[items[i].id].heal} 회복</span>
+                        )}
+                        {itemscript[items[i].id].defence > 0 && (
+                          <span className="text-blue-400 digital text-sm"> {itemscript[items[i].id].defence} 방어</span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <img src="/assets/itemframe.png" className="absolute inset-0 w-full h-full z-[3000]" />
+                </div>
+              ) : (
+                <div className="w-8 h-8 relative" key={i}>
+                  <div className="absolute inset-1 bg-slate-200" />
+                  <img
+                    src="/assets/itemframe.png"
+                    className="absolute inset-0 w-full h-full [image-rendering:pixelated]"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="w-full max-w-[550px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
               <div
@@ -336,7 +405,9 @@ const Home: NextPage = () => {
             setHps={setHps}
             allies={allies}
             options={options}
+            items={items}
             gameOver={() => setGameOver(true)}
+            setItems={setItems}
           />
         )}
         {isAllyOpen !== -1 && (

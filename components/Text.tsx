@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "re
 import { WindupChildren, useSkip, Effect, Pause, Pace, useIsFinished } from "windups";
 import script from "../scripts/script.json";
 import optionscript from "../scripts/options.json";
+import itemscript from "../scripts/items.json";
 import enemy_attack from "../scripts/enemy_attack.json";
 import cc from "classcat";
 import allies_info from "../scripts/allies_info.json";
@@ -13,13 +14,16 @@ interface TextProps {
   teamIndex: number;
   nextTeam: () => void;
   options: any;
+  items: any;
   setEnemyHp: (a: number | any) => void;
+  setItems: (a: { id: number; cnt: number }[] | any) => void;
   isEnd: boolean;
   allies: number[];
   gaps: number[];
   hps: number[];
   flag: boolean;
   setFlag: (f: boolean) => void;
+  setHps: Function;
 }
 
 const Options = ({
@@ -30,6 +34,9 @@ const Options = ({
   index,
   setIndex,
   options,
+  items,
+  setItems,
+  setHps,
 }: {
   setEnemyHp: TextProps["setEnemyHp"];
   teamIndex: TextProps["teamIndex"];
@@ -38,39 +45,124 @@ const Options = ({
   index: TextProps["index"];
   setIndex: TextProps["setIndex"];
   options: TextProps["options"];
+  items: TextProps["items"];
+  setItems: TextProps["setItems"];
+  setHps: TextProps["setHps"];
 }) => {
-  return options.map((o: number, i: number) => (
-    <div
-      className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
-      key={i}
-      onClick={
-        teamIndex < allies.length - 1
-          ? () => {
-              setEnemyHp((s: number) => s - optionscript[o].attack);
-              nextTeam();
-            }
-          : () => {
-              setEnemyHp((s: number) => s - optionscript[o].attack);
-              setIndex(script[index].next);
-            }
-      }
-    >
-      {">"} {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
-      {(optionscript[o].attack > 0 || optionscript[o].heal > 0 || optionscript[o].defence > 0) && (
-        <>
-          {optionscript[o].attack > 0 && (
-            <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+  return (
+    <>
+      {options.map((o: number, i: number) => (
+        <div
+          className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
+          key={i}
+          onClick={
+            teamIndex < allies.length - 1
+              ? () => {
+                  setEnemyHp((s: number) => s - optionscript[o].attack);
+                  setHps((hps: number[]) =>
+                    hps.map((hp, i) => {
+                      if (i === teamIndex) hp += optionscript[o].heal;
+                      return hp;
+                    }),
+                  );
+                  nextTeam();
+                }
+              : () => {
+                  setEnemyHp((s: number) => s - optionscript[o].attack);
+                  setHps((hps: number[]) =>
+                    hps.map((hp, i) => {
+                      if (i === teamIndex) hp += optionscript[o].heal;
+                      return hp;
+                    }),
+                  );
+                  setIndex(script[index].next);
+                }
+          }
+        >
+          {">"} {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
+          {(optionscript[o].attack > 0 || optionscript[o].heal > 0 || optionscript[o].defence > 0) && (
+            <>
+              {optionscript[o].attack > 0 && (
+                <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+              )}
+              {optionscript[o].heal > 0 && (
+                <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+              )}
+              {optionscript[o].defence > 0 && (
+                <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+              )}
+            </>
           )}
-          {optionscript[o].heal > 0 && (
-            <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
-          )}
-          {optionscript[o].defence > 0 && (
-            <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
-          )}
-        </>
+        </div>
+      ))}
+      {items.map(
+        (o: { id: number; cnt: number }, i: number) =>
+          o && (
+            <div
+              className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
+              key={i}
+              onClick={
+                teamIndex < allies.length - 1
+                  ? () => {
+                      setEnemyHp((s: number) => s - itemscript[o.id].attack);
+                      setItems((items: { id: number; cnt: number }[]) =>
+                        items.map((item) => {
+                          if (item.id === o.id) item.cnt--;
+                          if (item.cnt > 0) return item;
+                        }),
+                      );
+                      setHps((hps: number[]) =>
+                        hps.map((hp, i) => {
+                          if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
+                          return hp;
+                        }),
+                      );
+                      nextTeam();
+                    }
+                  : () => {
+                      setEnemyHp((s: number) => s - itemscript[o.id].attack);
+                      setItems((items: { id: number; cnt: number }[]) =>
+                        items.map((item) => {
+                          if (item.id === o.id) item.cnt--;
+                          if (item.cnt > 0) return item;
+                        }),
+                      );
+                      setHps((hps: number[]) =>
+                        hps.map((hp, i) => {
+                          if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
+                          return hp;
+                        }),
+                      );
+                      setIndex(script[index].next);
+                    }
+              }
+            >
+              <div className="flex items-center gap-2">
+                {">"}
+                <img src={`/assets/items/${itemscript[o.id].src}`} className="w-4 h-4" />
+                <span>
+                  {itemscript[o.id].title}
+                  {(itemscript[o.id].attack > 0 || itemscript[o.id].heal > 0 || itemscript[o.id].defence > 0) && (
+                    <>
+                      {itemscript[o.id].attack > 0 && (
+                        <span className="text-red-400 digital text-sm"> {itemscript[o.id].attack} 공격</span>
+                      )}
+                      {itemscript[o.id].heal > 0 && (
+                        <span className="text-green-400 digital text-sm"> {itemscript[o.id].heal} 회복</span>
+                      )}
+                      {itemscript[o.id].defence > 0 && (
+                        <span className="text-blue-400 digital text-sm"> {itemscript[o.id].defence} 방어</span>
+                      )}
+                    </>
+                  )}
+                  <small> {o.cnt}개 남음</small>
+                </span>
+              </div>
+            </div>
+          ),
       )}
-    </div>
-  ));
+    </>
+  );
 };
 
 const SkipButton = ({ isEnd, next, myTurn }: { isEnd: boolean; next: () => void; myTurn: boolean }) => {
@@ -92,12 +184,15 @@ const Text = ({
   teamIndex,
   nextTeam,
   options,
+  items,
   setEnemyHp,
   allies,
   gaps,
   hps,
   flag,
   setFlag,
+  setItems,
+  setHps,
 }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const [isDead, setIsDead] = useState(Array.from({ length: allies.length }, () => false));
@@ -185,8 +280,11 @@ const Text = ({
                       nextTeam={nextTeam}
                       setIndex={setIndex}
                       options={options}
+                      items={items}
                       allies={allies}
                       setEnemyHp={setEnemyHp}
+                      setItems={setItems}
+                      setHps={setHps}
                     />
                   </div>
                 </>
@@ -234,6 +332,5 @@ const Text = ({
 
 export default React.memo(
   Text,
-  (prevProps: TextProps, nextProps: TextProps) =>
-    prevProps.teamIndex === nextProps.teamIndex && prevProps.isEnd === nextProps.isEnd,
+  (p: TextProps, n: TextProps) => p.teamIndex === n.teamIndex && p.isEnd === n.isEnd && p.items === n.items,
 );

@@ -13,9 +13,11 @@ interface BattleProps {
   allies: number[];
   gameOver: () => void;
   options: number[][];
+  items: { id: number; cnt: number }[];
+  setItems: (a: { id: number; cnt: number }[] | any) => void;
 }
 
-const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattleProps) => {
+const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setItems }: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
   const [index, setIndex] = useState(0);
   const [teamIndex, setTeamIndex] = useState(-1);
@@ -82,12 +84,15 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
           isEffect && "animate-shake",
         ])}
       >
-        <div className="w-1/2 h-6 bg-slate-700 relative mt-10 rounded-full">
-          <div className="h-full bg-green-500 rounded-full" style={{ width: `${(enemyHp / 50) * 100}%` }}></div>
+        <div className="w-80 h-4 bg-black relative mt-10 rounded-full flex-shrink-0">
+          <div className="h-full bg-enemy-hp rounded-full" style={{ width: `${(enemyHp / 50) * 100}%` }}></div>
+          <div className="absolute inset-0">
+            <img src="/assets/enemyhpframe.png" />
+          </div>
         </div>
         <img
           src="/assets/sheep.png"
-          className={cc(["w-full md:h-60 h-1/3 object-contain p-10 flex-shrink-0", isEnemyAttacked && "animate-shake"])}
+          className={cc(["w-full md:h-48 h-1/3 object-contain p-10 flex-shrink-0", isEnemyAttacked && "animate-shake"])}
         />
         <div className="w-full grid grid-cols-4 bg-slate-200">
           {allies.map((a, i) => (
@@ -101,9 +106,9 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
             >
               <div
                 className={cc([
-                  "absolute inset-2 top-auto bg-red-500 bg-opacity-40",
-                  hps[i] > 10 && "bg-yellow-400",
-                  hps[i] > 30 && "bg-green-400",
+                  "absolute inset-2 top-auto bg-hp-danger bg-opacity-40",
+                  hps[i] > 10 && "bg-hp-warn",
+                  hps[i] > 30 && "bg-hp-good",
                 ])}
                 style={{ height: `calc(${(hps[i] / 50) * 100}% - 1rem)` }}
               ></div>
@@ -116,6 +121,11 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
             </div>
           ))}
         </div>
+        <div className="w-full grid grid-cols-5 bg-slate-200">
+          {items.map((item, i) => (
+            <div key={i}></div>
+          ))}
+        </div>
         <Text
           shake={() => {
             setIsEffect(true);
@@ -124,9 +134,12 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options }: BattlePro
           index={index}
           setIndex={setIndex}
           options={options[teamIndex]}
+          items={items}
+          setItems={setItems}
           teamIndex={teamIndex}
           nextTeam={() => setTeamIndex((i) => (i + 1) % allies.length)}
           setEnemyHp={setEnemyHp}
+          setHps={setHps}
           isEnd={enemyHp <= 0}
           allies={allies}
           gaps={prevHps.map((p, i) => hps[i] - p)}
