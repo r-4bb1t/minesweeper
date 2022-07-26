@@ -383,7 +383,14 @@ const Home: NextPage = () => {
                   }}
                 >
                   {/* {[ms[i][j].count, "!", "♥", "🥰"][cell]} */}
-                  {mo[i][j] ? [ms[i][j].count, "!", <img src="/assets/itembox.gif" />, "🥰"][cell] : "."}
+                  {mo[i][j]
+                    ? [
+                        ms[i][j].count,
+                        "!",
+                        <img src={`/assets/itembox.gif?${i * 10000 + j}`} key={i * 10000 + j} />,
+                        "🥰",
+                      ][cell]
+                    : "."}
                 </div>
                 {!mo[i][j] && mm[i][j] > 0 && (
                   <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center pointer-events-none">
