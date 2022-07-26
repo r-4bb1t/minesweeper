@@ -113,7 +113,7 @@ const Options = ({
                   );
                   setHps((hps: number[]) =>
                     hps.map((hp, i) => {
-                      if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
+                      if (i === teamIndex) hp = Math.min(itemscript[o.id].heal + hp, 50);
                       return hp;
                     }),
                   );
@@ -131,7 +131,7 @@ const Options = ({
                   );
                   setHps((hps: number[]) =>
                     hps.map((hp, i) => {
-                      if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
+                      if (i === teamIndex) hp = Math.min(itemscript[o.id].heal + hp, 50);
                       return hp;
                     }),
                   );
