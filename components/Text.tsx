@@ -106,10 +106,12 @@ const Options = ({
                   ? () => {
                       setEnemyHp((s: number) => s - itemscript[o.id].attack);
                       setItems((items: { id: number; cnt: number }[]) =>
-                        items.map((item) => {
-                          if (item.id === o.id) item.cnt--;
-                          if (item.cnt > 0) return item;
-                        }),
+                        items
+                          .map((item) => {
+                            if (item.id === o.id) item.cnt--;
+                            return item;
+                          })
+                          .filter((item: { id: number; cnt: number }) => item.cnt > 0),
                       );
                       setHps((hps: number[]) =>
                         hps.map((hp, i) => {
@@ -122,10 +124,12 @@ const Options = ({
                   : () => {
                       setEnemyHp((s: number) => s - itemscript[o.id].attack);
                       setItems((items: { id: number; cnt: number }[]) =>
-                        items.map((item) => {
-                          if (item.id === o.id) item.cnt--;
-                          if (item.cnt > 0) return item;
-                        }),
+                        items
+                          .map((item) => {
+                            if (item.id === o.id) item.cnt--;
+                            return item;
+                          })
+                          .filter((item: { id: number; cnt: number }) => item.cnt > 0),
                       );
                       setHps((hps: number[]) =>
                         hps.map((hp, i) => {
