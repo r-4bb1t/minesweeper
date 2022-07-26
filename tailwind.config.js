@@ -56,6 +56,7 @@ module.exports = {
         "hp-warn": "#ede47d",
         "hp-danger": "#ed7d7d",
         "enemy-hp": "#cf003d",
+        hasitem: "#64a241",
       },
     },
   },

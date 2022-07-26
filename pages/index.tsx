@@ -355,17 +355,17 @@ const Home: NextPage = () => {
             })}
           </div>
         </div>
-        <div className="w-full max-w-[550px] aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
+        <div className="w-fit aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
               <div
-                className={`${!mo[i][j] && "hover:animate-hovercell"} w-full h-full relative aspect-square`}
+                className={`${!mo[i][j] && "hover:animate-hovercell"} md:w-8 md:h-8 w-6 h-6 relative aspect-square`}
                 key={i * 10000 + j}
               >
                 <div
                   className={cc([
-                    "w-full h-full flex items-center justify-center font-bold cell",
-                    ms[i][j].hasItem && cell === 0 && "text-blue-400",
+                    "w-full h-full font-bold cell",
+                    ms[i][j].hasItem && cell === 0 && "text-hasitem",
                     mo[i][j] && "opened-cell",
                     mo[i][j] && cell === 1 && "mine-cell",
                     mo[i][j] && cell === 2 && "item-cell",
@@ -382,15 +382,24 @@ const Home: NextPage = () => {
                     open(i, j);
                   }}
                 >
+                  <div className="absolute top-0 left-0 w-full">
+                    {mo[i][j] ? (
+                      <img src="/assets/openedtile.png" className="w-full h-full object-top" />
+                    ) : (
+                      <img src="/assets/tile.png" className="w-full h-full object-top" />
+                    )}
+                  </div>
                   {/* {[ms[i][j].count, "!", "♥", "🥰"][cell]} */}
-                  {mo[i][j]
-                    ? [
-                        ms[i][j].count,
-                        "!",
-                        <img src={`/assets/itembox.gif?${i * 10000 + j}`} key={i * 10000 + j} />,
-                        "🥰",
-                      ][cell]
-                    : "."}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {mo[i][j]
+                      ? [
+                          ms[i][j].count,
+                          "!",
+                          <img src={`/assets/itembox.gif?${i * 10000 + j}`} key={i * 10000 + j} />,
+                          "🥰",
+                        ][cell]
+                      : "."}
+                  </div>
                 </div>
                 {!mo[i][j] && mm[i][j] > 0 && (
                   <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center pointer-events-none">

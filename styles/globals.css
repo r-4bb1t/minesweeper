@@ -26,21 +26,21 @@ html {
 }
 
 .cell {
-  background: rgba(44, 21, 52, 0.4);
+  /*   background: rgba(44, 21, 52, 0.4);
   border-radius: 7px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(50, 47, 75, 0.3);
+  border: 1px solid rgba(50, 47, 75, 0.3); */
 }
 
 .opened-cell {
-  background: rgba(223, 220, 239, 0.7);
+  /*   background: rgba(223, 220, 239, 0.7);
   border-radius: 7px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(50, 47, 75, 0.3);
+  border: 1px solid rgba(50, 47, 75, 0.3); */
 }
 
 .mine-cell {
