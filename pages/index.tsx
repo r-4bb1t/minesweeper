@@ -316,7 +316,7 @@ const Home: NextPage = () => {
                   <div className="absolute inset-0">
                     <img
                       src={`/assets/items/${itemscript[items[i].id].src}`}
-                      className="w-full h-full object-contain z-[3000]"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                   <div className="absolute bottom-1 right-1 text-sm w-4 h-4 items-center justify-center flex">
