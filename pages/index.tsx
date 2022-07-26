@@ -341,7 +341,7 @@ const Home: NextPage = () => {
                       </>
                     )}
                   </div>
-                  <img src="/assets/itemframe.png" className="absolute inset-0 w-full h-full z-[3000]" />
+                  <img src="/assets/itemframe.png" className="absolute inset-0 w-full h-full" />
                 </div>
               ) : (
                 <div className="w-8 h-8 relative" key={i}>
