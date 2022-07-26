@@ -95,76 +95,75 @@ const Options = ({
           )}
         </div>
       ))}
-      {items.map(
-        (o: { id: number; cnt: number }, i: number) =>
-          o && (
-            <div
-              className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
-              key={i}
-              onClick={
-                teamIndex < allies.length - 1
-                  ? () => {
-                      setEnemyHp((s: number) => s - itemscript[o.id].attack);
-                      setItems((items: { id: number; cnt: number }[]) =>
-                        items
-                          .map((item) => {
-                            if (item.id === o.id) item.cnt--;
-                            return item;
-                          })
-                          .filter((item: { id: number; cnt: number }) => item.cnt > 0),
-                      );
-                      setHps((hps: number[]) =>
-                        hps.map((hp, i) => {
-                          if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
-                          return hp;
-                        }),
-                      );
-                      nextTeam();
-                    }
-                  : () => {
-                      setEnemyHp((s: number) => s - itemscript[o.id].attack);
-                      setItems((items: { id: number; cnt: number }[]) =>
-                        items
-                          .map((item) => {
-                            if (item.id === o.id) item.cnt--;
-                            return item;
-                          })
-                          .filter((item: { id: number; cnt: number }) => item.cnt > 0),
-                      );
-                      setHps((hps: number[]) =>
-                        hps.map((hp, i) => {
-                          if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
-                          return hp;
-                        }),
-                      );
-                      setIndex(script[index].next);
-                    }
-              }
-            >
-              <div className="flex items-center gap-2">
-                {">"}
-                <img src={`/assets/items/${itemscript[o.id].src}`} className="w-4 h-4" />
-                <span>
-                  {itemscript[o.id].title}
-                  {(itemscript[o.id].attack > 0 || itemscript[o.id].heal > 0 || itemscript[o.id].defence > 0) && (
-                    <>
-                      {itemscript[o.id].attack > 0 && (
-                        <span className="text-red-400 digital text-sm"> {itemscript[o.id].attack} 공격</span>
-                      )}
-                      {itemscript[o.id].heal > 0 && (
-                        <span className="text-green-400 digital text-sm"> {itemscript[o.id].heal} 회복</span>
-                      )}
-                      {itemscript[o.id].defence > 0 && (
-                        <span className="text-blue-400 digital text-sm"> {itemscript[o.id].defence} 방어</span>
-                      )}
-                    </>
-                  )}
-                  <small> {o.cnt}개 남음</small>
-                </span>
-              </div>
+      {items.map((o: { id: number; cnt: number }, i: number) => (
+        <div
+          className="ml-1 hover:bg-white hover:bg-opacity-20 cursor-pointer digital"
+          key={i}
+          onClick={
+            teamIndex < allies.length - 1
+              ? () => {
+                  setEnemyHp((s: number) => s - itemscript[o.id].attack);
+                  setItems((items: { id: number; cnt: number }[]) =>
+                    items
+                      .map((item) => {
+                        if (item.id === o.id) item.cnt--;
+                        return item;
+                      })
+                      .filter((item: { id: number; cnt: number }) => item.cnt > 0),
+                  );
+                  setHps((hps: number[]) =>
+                    hps.map((hp, i) => {
+                      if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
+                      return hp;
+                    }),
+                  );
+                  nextTeam();
+                }
+              : () => {
+                  setEnemyHp((s: number) => s - itemscript[o.id].attack);
+                  setItems((items: { id: number; cnt: number }[]) =>
+                    items
+                      .map((item) => {
+                        if (item.id === o.id) item.cnt--;
+                        return item;
+                      })
+                      .filter((item: { id: number; cnt: number }) => item.cnt > 0),
+                  );
+                  setHps((hps: number[]) =>
+                    hps.map((hp, i) => {
+                      if (i === teamIndex) hp = Math.max(itemscript[o.id].heal + hp, 50);
+                      return hp;
+                    }),
+                  );
+                  setIndex(script[index].next);
+                }
+          }
+        >
+          {o && (
+            <div className="flex items-center gap-2">
+              {">"}
+              <img src={`/assets/items/${itemscript[o.id].src}`} className="w-4 h-4" />
+              <span>
+                {itemscript[o.id].title}
+                {(itemscript[o.id].attack > 0 || itemscript[o.id].heal > 0 || itemscript[o.id].defence > 0) && (
+                  <>
+                    {itemscript[o.id].attack > 0 && (
+                      <span className="text-red-400 digital text-sm"> {itemscript[o.id].attack} 공격</span>
+                    )}
+                    {itemscript[o.id].heal > 0 && (
+                      <span className="text-green-400 digital text-sm"> {itemscript[o.id].heal} 회복</span>
+                    )}
+                    {itemscript[o.id].defence > 0 && (
+                      <span className="text-blue-400 digital text-sm"> {itemscript[o.id].defence} 방어</span>
+                    )}
+                  </>
+                )}
+                <small> {o.cnt}개 남음</small>
+              </span>
             </div>
-          ),
-      )}
+          )}
+        </div>
+      ))}
     </>
   );
 };
