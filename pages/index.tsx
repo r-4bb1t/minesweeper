@@ -159,7 +159,7 @@ const Home: NextPage = () => {
       setTimeout(() => {
         setIsBattle(true);
         setIsEffect(false);
-      }, 1000);
+      }, 500);
     }
 
     if (mp[a[0][0]][a[0][1]] === CELL.ally) {
@@ -170,7 +170,7 @@ const Home: NextPage = () => {
         while (allies.some((a) => a === i)) i = Math.floor(Math.random() * (allies_info.length - 1) + 1);
         setIsAllyOpen(i);
         //setIsEffect(false);
-      }, 1000);
+      }, 500);
     }
 
     if (mp[a[0][0]][a[0][1]] === CELL.item) {

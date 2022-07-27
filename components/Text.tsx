@@ -271,7 +271,7 @@ const Text = ({
               ) : null}
               <span className="hidden">{teamIndex}</span>
               {index % 2 === 1 && !isEnd && teamIndex >= 0 && (
-                <span className="digital">{allies_info[allies[teamIndex]].name}은(는) 어떻게 할까?</span>
+                <span className="digital">{allies_info[allies[teamIndex]].name}는 어떻게 할까?</span>
               )}
               {index % 2 === 1 && !isEnd ? (
                 <>
@@ -300,7 +300,7 @@ const Text = ({
                         <>
                           <br key={`br${i}`} />
                           <span key={`span${i}`} className="digital">
-                            {allies_info[ally].name}은(는) 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}
+                            {allies_info[ally].name}는 체력이 {Math.abs(gaps[i])} {gaps[i] > 0 ? "증가" : "감소"}
                             했다.
                           </span>
                         </>
@@ -309,7 +309,7 @@ const Text = ({
                         <>
                           <br key={`_br${i}`} />
                           <span key={`_span${i}`} className="digital">
-                            {allies_info[ally].name}은(는) 쓰러졌다.
+                            {allies_info[ally].name}는 쓰러졌다.
                           </span>
                         </>
                       ) : null}

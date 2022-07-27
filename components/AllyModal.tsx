@@ -27,9 +27,9 @@ const AllyModal = ({ setAllies, newAlly, close, ok }: AllyModalProps) => {
           <>
             <img src={allies_info[newAlly].src} className={"object-contain z-[3000]"} />
             {ok ? (
-              <div>{allies_info[newAlly].name}이(가) 새 동료가 되었다!</div>
+              <div>{allies_info[newAlly].name}가 새 동료가 되었다!</div>
             ) : (
-              <div>{allies_info[newAlly].name}이(가) 찾아왔으나 자리가 없어 돌아갔다.</div>
+              <div>{allies_info[newAlly].name}가 찾아왔으나 자리가 없어 돌아갔다.</div>
             )}
           </>
         )}

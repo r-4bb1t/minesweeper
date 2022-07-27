@@ -47,14 +47,14 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
     setIsEnemyAttacked(true);
     setTimeout(() => {
       setIsEnemyAttacked(false);
-    }, 1000);
+    }, 500);
   }, [enemyHp]);
 
   useEffect(() => {
     if (isAttacked.every((_) => false)) return;
     setTimeout(() => {
       setIsAttacked((s) => s.map((_) => false));
-    }, 1000);
+    }, 500);
   }, [isAttacked]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
     setHps(newHps);
     setTimeout(() => {
       setIsAttacked(newAttacked);
-    }, 1000);
+    }, 500);
   }, [index]);
 
   return (
@@ -129,7 +129,7 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
         <Text
           shake={() => {
             setIsEffect(true);
-            setTimeout(() => setIsEffect(false), 1000);
+            setTimeout(() => setIsEffect(false), 500);
           }}
           index={index}
           setIndex={setIndex}
