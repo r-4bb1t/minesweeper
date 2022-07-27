@@ -112,10 +112,10 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
                 ])}
                 style={{ height: `calc(${(hps[i] / 50) * 100}% - 1rem)` }}
               ></div>
-              <div className="absolute inset-2">
+              <div className="absolute p-2 inset-2">
                 <img
                   src={allies_info[a].src}
-                  className={cc(["object-contain z-[3000]", isAttacked[i] && "animate-pulse"])}
+                  className={cc(["object-contain z-[3000] w-full h-full", isAttacked[i] && "animate-pulse"])}
                 />
               </div>
             </div>
