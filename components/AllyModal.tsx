@@ -21,7 +21,7 @@ const AllyModal = ({ setAllies, newAlly, close, ok }: AllyModalProps) => {
         initial={{ opacity: 0, y: 100, scale: 0.3 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-        className="w-full max-w-[400px] h-[450px] bg-white md:rounded-2xl flex flex-col items-center"
+        className="w-full max-w-[400px] h-[450px] bg-white md:rounded-2xl flex flex-col items-center justify-center gap-10"
       >
         {newAlly !== -1 && (
           <>

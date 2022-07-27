@@ -300,7 +300,7 @@ const Home: NextPage = () => {
                 </div>
               ) : (
                 <div className="aspect-square w-full relative" key={i}>
-                  <div className="absolute inset-2 bg-slate-200" />
+                  <div className="absolute inset-2 bg-allybox" />
                   <img src="/assets/frame.png" className="absolute inset-0 w-full h-full]" />
                 </div>
               );
@@ -312,7 +312,7 @@ const Home: NextPage = () => {
             {[...Array(10)].map((_, i) => {
               return items[i] ? (
                 <div className="w-8 h-8 relative group" key={i}>
-                  <div className="absolute inset-1 bg-slate-200" />
+                  <div className="absolute inset-1 bg-itembox" />
                   <div className="absolute inset-0">
                     <img
                       src={`/assets/items/${itemscript[items[i].id].src}`}
@@ -345,7 +345,7 @@ const Home: NextPage = () => {
                 </div>
               ) : (
                 <div className="w-8 h-8 relative" key={i}>
-                  <div className="absolute inset-1 bg-slate-200" />
+                  <div className="absolute inset-1 bg-itembox" />
                   <img
                     src="/assets/itemframe.png"
                     className="absolute inset-0 w-full h-full [image-rendering:pixelated]"
@@ -396,7 +396,7 @@ const Home: NextPage = () => {
                           ms[i][j].count,
                           "!",
                           <img src={`/assets/itembox.gif?${i * 10000 + j}`} key={i * 10000 + j} />,
-                          "🥰",
+                          <img src="/assets/allytile.png" key={i * 10000 + j} />,
                         ][cell]
                       : "."}
                   </div>

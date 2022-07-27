@@ -57,6 +57,8 @@ module.exports = {
         "hp-danger": "#ed7d7d",
         "enemy-hp": "#cf003d",
         hasitem: "#64a241",
+        itembox: "#33221e",
+        allybox: "#64423b",
       },
     },
   },
