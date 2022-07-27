@@ -90,7 +90,7 @@ const Home: NextPage = () => {
       }
       initMp[x][y] = CELL.item;
     }
-    for (let i = 0; i < sz / 2; i++) {
+    for (let i = 0; i < Math.min(sz / 2, allies_info.length); i++) {
       let x = Math.floor(Math.random() * sz);
       let y = Math.floor(Math.random() * sz);
       while (
@@ -166,7 +166,9 @@ const Home: NextPage = () => {
       //setIsEffect(true);
       setIsPlaying(false);
       setTimeout(() => {
-        setIsAllyOpen(Math.floor(Math.random() * allies_info.length));
+        let i = Math.floor(Math.random() * (allies_info.length - 1) + 1);
+        while (allies.some((a) => a === i)) i = Math.floor(Math.random() * (allies_info.length - 1) + 1);
+        setIsAllyOpen(i);
         //setIsEffect(false);
       }, 1000);
     }
@@ -355,7 +357,7 @@ const Home: NextPage = () => {
             })}
           </div>
         </div>
-        <div className="w-fit aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[2px] justify-center items-center select-none">
+        <div className="w-fit aspect-square grid grid-cols-[repeat(15,minmax(0,1fr))] gap-0 justify-center items-center select-none">
           {mp.map((line, i) =>
             line.map((cell, j) => (
               <div
@@ -384,13 +386,17 @@ const Home: NextPage = () => {
                 >
                   <div className="absolute top-0 left-0 w-full">
                     {mo[i][j] ? (
-                      <img src="/assets/openedtile.png" className="w-full h-full object-top" />
+                      mp[i][j] === CELL.none ? (
+                        <img src="/assets/openedtile.png" className="w-full h-full object-bottom" />
+                      ) : (
+                        <img src="/assets/itemtile.png" className="w-full h-full object-bottom" />
+                      )
                     ) : (
-                      <img src="/assets/tile.png" className="w-full h-full object-top" />
+                      <img src="/assets/tile.png" className="w-full h-full object-bottom" />
                     )}
                   </div>
                   {/* {[ms[i][j].count, "!", "♥", "🥰"][cell]} */}
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 pt-2 flex items-center justify-center">
                     {mo[i][j]
                       ? [
                           ms[i][j].count,

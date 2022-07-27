@@ -16,5 +16,11 @@
     "name": "신디",
     "src": "/assets/faces/team3.png",
     "face": "/assets/faces/team3.png"
+  },
+  {
+    "id": 3,
+    "name": "로아",
+    "src": "/assets/faces/team3.png",
+    "face": "/assets/faces/team3.png"
   }
 ]
