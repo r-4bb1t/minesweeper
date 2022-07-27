@@ -247,7 +247,7 @@ const Home: NextPage = () => {
   return (
     <>
       <div
-        className={`w-screen h-screen overflow-y-auto flex flex-col justify-center items-center p-3 bg-blue-200 gap-5 ${
+        className={`w-screen h-screen overflow-y-auto flex flex-col justify-center items-center p-3 bg-background gap-5 ${
           isEffect && "animate-scale"
         }`}
       >
