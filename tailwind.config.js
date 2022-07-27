@@ -59,7 +59,7 @@ module.exports = {
         hasitem: "#64a241",
         itembox: "#33221e",
         allybox: "#64423b",
-        background: "#28273c",
+        background: "#2c1a20",
       },
     },
   },

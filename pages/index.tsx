@@ -90,7 +90,7 @@ const Home: NextPage = () => {
       }
       initMp[x][y] = CELL.item;
     }
-    for (let i = 0; i < Math.min(sz / 2, allies_info.length); i++) {
+    for (let i = 0; i < Math.min(sz / 2, allies_info.length - 1); i++) {
       let x = Math.floor(Math.random() * sz);
       let y = Math.floor(Math.random() * sz);
       while (
