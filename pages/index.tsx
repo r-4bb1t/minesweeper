@@ -259,6 +259,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (!isBattle && isAllyOpen === -1 && !gameOver) {
+      setIsPlaying(true);
       return;
     }
     setIsPlaying(false);
@@ -492,8 +493,10 @@ const Home: NextPage = () => {
           <button
             onClick={() => {
               setIsGameStarted(true);
-              bgm.loop = true;
-              bgm.play();
+              if (bgm) {
+                bgm.loop = true;
+                bgm.play();
+              }
               console.log("dd");
             }}
             className="bg-[url(/assets/button.png)] bg-cover [image-rendering:pixelated] bg-no-repeat w-48 h-14 pb-2 flex items-center justify-center text-xl font-extrabold"
