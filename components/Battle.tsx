@@ -5,6 +5,9 @@ import script from "../scripts/script.json";
 import enemy_attack from "../scripts/enemy_attack.json";
 import allies_info from "../scripts/allies_info.json";
 import { AnimatePresence, motion } from "framer-motion";
+import { ToastContainer, toast, cssTransition } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "animate.css/animate.min.css";
 
 interface BattleProps {
   hps: number[];
@@ -26,7 +29,6 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
   const [isAttacked, setIsAttacked] = useState(Array.from({ length: hps.length }, () => false));
   const [myTurn, setMyTurn] = useState(false);
   const [prevHps, setPrevHps] = useState(Array.from(hps));
-  const [messages, setMessages] = useState(Array.from({ length: allies.length }, () => null as unknown as string));
 
   const [flag, setFlag] = useState(true);
 
@@ -63,21 +65,28 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
     const attacks = enemy_attack[script[index].attack!].attack;
     const newAttacked = Array.from(isAttacked);
     const randomAttack = attacks[Math.floor(Math.random() * attacks.length)];
-    const newMessages = Array.from(messages);
     const newHps = hps.map((hp, i) => {
-      if (randomAttack[i] > 0) {
+      if (randomAttack[i] > 0 && hp > 0) {
         newAttacked[i] = true;
-        newMessages[i] =
+        setTimeout(() => {
+          toast(
+            hp - randomAttack[i] <= 0
+              ? allies_info[allies[i]].messages.defeated
+              : allies_info[allies[i]].messages.attacked,
+            { containerId: i },
+          );
+        }, 100);
+
+        /* newMessages[i] =
           hp - randomAttack[i] <= 0
             ? allies_info[allies[i]].messages.defeated
-            : allies_info[allies[i]].messages.attacked;
+            : allies_info[allies[i]].messages.attacked; */
       }
       return Math.max(hp - randomAttack[i], 0);
     });
     setPrevHps(hps);
     setHps(newHps);
     setIsAttacked(newAttacked);
-    setMessages(newMessages);
   }, [index]);
 
   return (
@@ -113,35 +122,25 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
                 style={{ height: `calc(${(hps[i] / 50) * 100}% - 1rem)` }}
               ></div>
               <div className="absolute p-2 inset-2">
-                <AnimatePresence>
-                  {messages[i] && (
-                    <motion.div
-                      animate={{
-                        opacity: [0, 1, 1],
-                        y: [10, 0, 0],
-                        scale: [0.3, 1, 1],
-                        transition: { times: [0, 0.2, 1.5] },
-                      }}
-                      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-                      onAnimationComplete={() => {
-                        setMessages((messages) =>
-                          messages.map((message, ii) => {
-                            if (i === ii) return null as unknown as string;
-                            return message;
-                          }),
-                        );
-                      }}
-                      className="absolute -top-8 w-fit h-8 bg-slate-400 rounded-lg border-[1px] flex items-center px-2 after:border-transparent after:border-b-0 after:border-4 after:border-t-slate-400 after:absolute after:top-full after:left-2"
-                    >
-                      {messages[i]}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <ToastContainer
+                  closeButton={false}
+                  closeOnClick={false}
+                  enableMultiContainer
+                  containerId={i}
+                  autoClose={200}
+                  newestOnTop={true}
+                  position="bottom-center"
+                  transition={cssTransition({
+                    collapseDuration: 100,
+                    enter: "animate__animated animate__bounceIn",
+                    exit: "animate__animated animate__bounceOut",
+                  })}
+                />
                 <img
                   src={allies_info[a].src}
                   className={cc([
                     "object-contain z-[3000] w-full h-full",
-                    isAttacked[i] && "animate-pulse",
+                    isAttacked[i] && "animate-pulse-2",
                     hps[i] <= 0 && "opacity-20",
                   ])}
                 />
@@ -174,8 +173,6 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
           hps={hps}
           flag={flag}
           setFlag={setFlag}
-          messages={messages}
-          setMessages={setMessages}
         />
       </motion.div>
     </div>

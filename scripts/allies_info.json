@@ -17,10 +17,10 @@
     "src": "/assets/faces/team2.png",
     "face": "/assets/faces/team2.png",
     "messages": {
-      "heal": "헤헤",
-      "attack": "받아라!",
-      "attacked": "으앙",
-      "defeated": "꾀꼬닥."
+      "heal": "좋아!",
+      "attack": "공격!",
+      "attacked": "앗!",
+      "defeated": "이런..."
     }
   },
   {
@@ -29,10 +29,10 @@
     "src": "/assets/faces/team3.png",
     "face": "/assets/faces/team3.png",
     "messages": {
-      "heal": "헤헤",
-      "attack": "받아라!",
-      "attacked": "으앙",
-      "defeated": "꾀꼬닥."
+      "heal": "🥰",
+      "attack": "😛",
+      "attacked": "😥",
+      "defeated": "😱"
     }
   },
   {
@@ -41,10 +41,10 @@
     "src": "/assets/faces/team4.png",
     "face": "/assets/faces/team4.png",
     "messages": {
-      "heal": "헤헤",
-      "attack": "받아라!",
-      "attacked": "으앙",
-      "defeated": "꾀꼬닥."
+      "heal": "신난다-",
+      "attack": "이얍-",
+      "attacked": "아야-",
+      "defeated": "안돼-"
     }
   }
 ]

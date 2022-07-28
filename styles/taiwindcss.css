@@ -23,3 +23,19 @@
   --animation-fill-mode: [value];
   animation-fill-mode: var(--animation-fill-mode);
 }
+
+.Toastify__toast-container {
+  @apply !absolute !bottom-full;
+}
+
+.Toastify__progress-bar {
+  @apply !opacity-0;
+}
+
+.Toastify__toast {
+  @apply !overflow-visible !w-fit !border-none !h-8 !min-h-min !bg-slate-400 !text-slate-800 !rounded-lg !shadow-none border-[1px] flex items-center !px-2 !py-0 after:border-transparent after:border-b-0 after:border-4 after:border-t-slate-400 after:absolute after:top-full after:left-2;
+}
+
+.Toastify__toast-body {
+  @apply !p-0 !m-0;
+}
