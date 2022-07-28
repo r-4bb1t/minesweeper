@@ -259,12 +259,9 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (!isBattle && isAllyOpen === -1 && !gameOver) {
-      setIsPlaying(true);
-      if (bgm && bgm.paused) bgm.play();
       return;
     }
     setIsPlaying(false);
-    if (bgm) bgm.pause();
   }, [isBattle, isAllyOpen, gameOver]);
 
   useEffect(() => {
@@ -275,6 +272,10 @@ const Home: NextPage = () => {
       setHps(newHps);
       setAllies(newAllies);
       setOptions(newOptions);
+      setIsPlaying(true);
+      if (bgm && bgm.paused && !gameOver) bgm.play();
+    } else {
+      if (bgm) bgm.pause();
     }
   }, [isBattle]);
 

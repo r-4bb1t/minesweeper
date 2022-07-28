@@ -37,13 +37,19 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
     else setTeamIndex(-1);
     setMyTurn(index % 2 === 1);
     if (hps.every((h) => h <= 0)) {
+      const audio = new Audio("/assets/sound/gameover.wav");
+      audio.play();
       endBattle();
       gameOver();
     }
   }, [index]);
 
   useEffect(() => {
-    if (!flag && enemyHp <= 0) endBattle();
+    if (!flag && enemyHp <= 0) {
+      const audio = new Audio("/assets/sound/win.wav");
+      audio.play();
+      endBattle();
+    }
   }, [flag]);
 
   useEffect(() => {
