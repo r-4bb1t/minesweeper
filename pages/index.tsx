@@ -204,7 +204,7 @@ const Home: NextPage = () => {
   const memo = (xx: number, yy: number) => {
     if (mo[xx][yy]) return;
     const newMm = Array.from(mm);
-    newMm[xx][yy] = (newMm[xx][yy] + 1) % 3;
+    newMm[xx][yy] = (newMm[xx][yy] + 1) % 4;
     setMm(newMm);
   };
 
@@ -395,7 +395,6 @@ const Home: NextPage = () => {
                       <img src="/assets/tile.png" className="w-full h-full object-bottom" />
                     )}
                   </div>
-                  {/* {[ms[i][j].count, "!", "♥", "🥰"][cell]} */}
                   <div className="absolute inset-0 pt-2 flex items-center justify-center">
                     {mo[i][j]
                       ? [
@@ -408,7 +407,7 @@ const Home: NextPage = () => {
                   </div>
                 </div>
                 {!mo[i][j] && mm[i][j] > 0 && (
-                  <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-full h-full absolute top-1 left-0 flex items-center justify-center pointer-events-none">
                     {mm[i][j] === 1 && <div className="text-red-400">▲</div>}
                     {mm[i][j] === 2 && <div className="text-blue-400">▲</div>}
                     {mm[i][j] === 3 && <div className="text-yellow-400">▲</div>}

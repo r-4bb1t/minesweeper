@@ -24,6 +24,8 @@ interface TextProps {
   flag: boolean;
   setFlag: (f: boolean) => void;
   setHps: Function;
+  setMessages: Function;
+  messages: string[];
 }
 
 const Options = ({
@@ -37,6 +39,8 @@ const Options = ({
   items,
   setItems,
   setHps,
+  messages,
+  setMessages,
 }: {
   setEnemyHp: TextProps["setEnemyHp"];
   teamIndex: TextProps["teamIndex"];
@@ -48,6 +52,8 @@ const Options = ({
   items: TextProps["items"];
   setItems: TextProps["setItems"];
   setHps: TextProps["setHps"];
+  setMessages: TextProps["setMessages"];
+  messages: TextProps["messages"];
 }) => {
   return (
     <>
@@ -58,23 +64,43 @@ const Options = ({
           onClick={
             teamIndex < allies.length - 1
               ? () => {
-                  setEnemyHp((s: number) => s - optionscript[o].attack);
-                  setHps((hps: number[]) =>
-                    hps.map((hp, i) => {
-                      if (i === teamIndex) hp += optionscript[o].heal;
-                      return hp;
-                    }),
-                  );
+                  const newMessages = Array.from(messages);
+                  if (optionscript[o].attack > 0) {
+                    setEnemyHp((s: number) => s - optionscript[o].attack);
+                    newMessages[teamIndex] = allies_info[allies[teamIndex]].messages.attack;
+                  }
+                  if (optionscript[o].heal > 0) {
+                    setHps((hps: number[]) =>
+                      hps.map((hp, ii) => {
+                        if (ii === teamIndex) {
+                          hp += optionscript[o].heal;
+                          newMessages[ii] = allies_info[allies[ii]].messages.heal;
+                        }
+                        return hp;
+                      }),
+                    );
+                  }
+                  setMessages(newMessages);
                   nextTeam();
                 }
               : () => {
-                  setEnemyHp((s: number) => s - optionscript[o].attack);
-                  setHps((hps: number[]) =>
-                    hps.map((hp, i) => {
-                      if (i === teamIndex) hp += optionscript[o].heal;
-                      return hp;
-                    }),
-                  );
+                  const newMessages = Array.from(messages);
+                  if (optionscript[o].attack > 0) {
+                    setEnemyHp((s: number) => s - optionscript[o].attack);
+                    newMessages[teamIndex] = allies_info[allies[teamIndex]].messages.attack;
+                  }
+                  if (optionscript[o].heal > 0) {
+                    setHps((hps: number[]) =>
+                      hps.map((hp, ii) => {
+                        if (ii === teamIndex) {
+                          hp += optionscript[o].heal;
+                          newMessages[ii] = allies_info[allies[ii]].messages.heal;
+                        }
+                        return hp;
+                      }),
+                    );
+                  }
+                  setMessages(newMessages);
                   setIndex(script[index].next);
                 }
           }
@@ -102,7 +128,11 @@ const Options = ({
           onClick={
             teamIndex < allies.length - 1
               ? () => {
-                  setEnemyHp((s: number) => s - itemscript[o.id].attack);
+                  const newMessages = Array.from(messages);
+                  if (itemscript[o.id].attack > 0) {
+                    setEnemyHp((s: number) => s - itemscript[o.id].attack);
+                    newMessages[teamIndex] = allies_info[allies[teamIndex]].messages.attack;
+                  }
                   setItems((items: { id: number; cnt: number }[]) =>
                     items
                       .map((item) => {
@@ -112,14 +142,19 @@ const Options = ({
                       .filter((item: { id: number; cnt: number }) => item.cnt > 0),
                   );
                   setHps((hps: number[]) =>
-                    hps.map((hp, i) => {
-                      if (i === teamIndex) hp = Math.min(itemscript[o.id].heal + hp, 50);
+                    hps.map((hp, ii) => {
+                      if (ii === teamIndex) {
+                        hp += itemscript[o.id].heal;
+                        newMessages[ii] = allies_info[allies[ii]].messages.heal;
+                      }
                       return hp;
                     }),
                   );
+                  setMessages(newMessages);
                   nextTeam();
                 }
               : () => {
+                  const newMessages = Array.from(messages);
                   setEnemyHp((s: number) => s - itemscript[o.id].attack);
                   setItems((items: { id: number; cnt: number }[]) =>
                     items
@@ -130,11 +165,15 @@ const Options = ({
                       .filter((item: { id: number; cnt: number }) => item.cnt > 0),
                   );
                   setHps((hps: number[]) =>
-                    hps.map((hp, i) => {
-                      if (i === teamIndex) hp = Math.min(itemscript[o.id].heal + hp, 50);
+                    hps.map((hp, ii) => {
+                      if (ii === teamIndex) {
+                        hp += itemscript[o.id].heal;
+                        newMessages[ii] = allies_info[allies[ii]].messages.heal;
+                      }
                       return hp;
                     }),
                   );
+                  setMessages(newMessages);
                   setIndex(script[index].next);
                 }
           }
@@ -196,6 +235,8 @@ const Text = ({
   setFlag,
   setItems,
   setHps,
+  messages,
+  setMessages,
 }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const [isDead, setIsDead] = useState(Array.from({ length: allies.length }, () => false));
@@ -288,6 +329,8 @@ const Text = ({
                       setEnemyHp={setEnemyHp}
                       setItems={setItems}
                       setHps={setHps}
+                      messages={messages}
+                      setMessages={setMessages}
                     />
                   </div>
                 </>

@@ -3,24 +3,48 @@
     "id": 0,
     "name": "미카",
     "src": "/assets/faces/team1.png",
-    "face": "/assets/faces/team1.png"
+    "face": "/assets/faces/team1.png",
+    "messages": {
+      "heal": "헤헤",
+      "attack": "받아라!",
+      "attacked": "으앙",
+      "defeated": "꾀꼬닥."
+    }
   },
   {
     "id": 1,
     "name": "사라",
     "src": "/assets/faces/team2.png",
-    "face": "/assets/faces/team2.png"
+    "face": "/assets/faces/team2.png",
+    "messages": {
+      "heal": "헤헤",
+      "attack": "받아라!",
+      "attacked": "으앙",
+      "defeated": "꾀꼬닥."
+    }
   },
   {
     "id": 2,
     "name": "신디",
     "src": "/assets/faces/team3.png",
-    "face": "/assets/faces/team3.png"
+    "face": "/assets/faces/team3.png",
+    "messages": {
+      "heal": "헤헤",
+      "attack": "받아라!",
+      "attacked": "으앙",
+      "defeated": "꾀꼬닥."
+    }
   },
   {
     "id": 3,
     "name": "로아",
     "src": "/assets/faces/team4.png",
-    "face": "/assets/faces/team4.png"
+    "face": "/assets/faces/team4.png",
+    "messages": {
+      "heal": "헤헤",
+      "attack": "받아라!",
+      "attacked": "으앙",
+      "defeated": "꾀꼬닥."
+    }
   }
 ]
