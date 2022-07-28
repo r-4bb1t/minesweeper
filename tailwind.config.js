@@ -58,6 +58,7 @@ module.exports = {
         "enemy-hp": "#cf003d",
         hasitem: "#64a241",
         itembox: "#33221e",
+        hasBoss: "#cf003d",
         allybox: "#64423b",
         background: "#2c1a20",
       },

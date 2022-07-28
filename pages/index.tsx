@@ -23,6 +23,7 @@ const dir = [
 interface msType {
   count: number;
   hasItem: boolean;
+  hasBoss: boolean;
 }
 
 enum CELL {
@@ -30,6 +31,7 @@ enum CELL {
   monster,
   item,
   ally,
+  boss,
 }
 
 const Home: NextPage = () => {
@@ -38,7 +40,7 @@ const Home: NextPage = () => {
   const [ms, setMs] = useState(
     Array.from({ length: sz }, () =>
       Array.from({ length: sz }, () => {
-        return { count: 0, hasItem: false } as msType;
+        return { count: 0, hasItem: false, hasBoss: false } as msType;
       }),
     ),
   );
@@ -57,6 +59,9 @@ const Home: NextPage = () => {
 
   const [allies, setAllies] = useState([0]);
   const [isAllyOpen, setIsAllyOpen] = useState(-1);
+
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [bgm] = useState(typeof Audio !== "undefined" && new Audio("/assets/sound/main.wav"));
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -105,6 +110,20 @@ const Home: NextPage = () => {
       }
       initMp[x][y] = CELL.ally;
     }
+
+    let x = Math.floor(Math.random() * sz);
+    let y = Math.floor(Math.random() * sz);
+    while (
+      initMp[x][y] !== CELL.none ||
+      (x >= Math.floor(sz / 2) - 1 &&
+        y >= Math.floor(sz / 2) - 1 &&
+        x <= Math.floor(sz / 2) + 1 &&
+        y <= Math.floor(sz / 2) + 1)
+    ) {
+      x = Math.floor(Math.random() * sz);
+      y = Math.floor(Math.random() * sz);
+    }
+    initMp[x][y] = CELL.boss;
     setMp(initMp);
   };
 
@@ -113,16 +132,18 @@ const Home: NextPage = () => {
     for (let i = 0; i < sz; i++) {
       for (let j = 0; j < sz; j++) {
         let f = 0,
-          h = false;
+          h = false,
+          b = false;
         for (let k = 0; k < 8; k++) {
           if (i + dir[k][0] < 0 || i + dir[k][0] >= sz || j + dir[k][1] < 0 || j + dir[k][1] >= sz) continue;
           if (mp[i + dir[k][0]][j + dir[k][1]] !== CELL.none) {
             f++;
             if (mp[i + dir[k][0]][j + dir[k][1]] === CELL.item || mp[i + dir[k][0]][j + dir[k][1]] === CELL.ally)
               h = true;
+            if (mp[i + dir[k][0]][j + dir[k][1]] === CELL.boss) b = true;
           }
         }
-        initMs[i][j] = { count: f, hasItem: h };
+        initMs[i][j] = { count: f, hasItem: h, hasBoss: b };
       }
     }
     setMs(initMs);
@@ -154,6 +175,8 @@ const Home: NextPage = () => {
     initMo[a[0][0]][a[0][1]] = true;
 
     if (mp[a[0][0]][a[0][1]] === CELL.monster) {
+      var enemyAudio = new Audio("/assets/sound/enemy.wav");
+      enemyAudio.play();
       setIsEffect(true);
       setIsPlaying(false);
       setTimeout(() => {
@@ -174,6 +197,8 @@ const Home: NextPage = () => {
     }
 
     if (mp[a[0][0]][a[0][1]] === CELL.item) {
+      var itemAudio = new Audio("/assets/sound/item.wav");
+      itemAudio.play();
       const newItem = Math.floor(Math.random() * itemscript.length);
       if (items.some((item) => item.id === newItem))
         setItems((items) =>
@@ -183,6 +208,11 @@ const Home: NextPage = () => {
           }),
         );
       else setItems((items) => [...items, { id: newItem, cnt: 1 }]);
+    }
+
+    if (mp[a[0][0]][a[0][1]] === CELL.none) {
+      var openAudio = new Audio("/assets/sound/open.wav");
+      openAudio.play();
     }
 
     if (mp[a[0][0]][a[0][1]] === 0 && ms[a[0][0]][a[0][1]].count === 0)
@@ -230,9 +260,11 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (!isBattle && isAllyOpen === -1 && !gameOver) {
       setIsPlaying(true);
+      if (bgm && bgm.paused) bgm.play();
       return;
     }
     setIsPlaying(false);
+    if (bgm) bgm.pause();
   }, [isBattle, isAllyOpen, gameOver]);
 
   useEffect(() => {
@@ -368,10 +400,11 @@ const Home: NextPage = () => {
                   className={cc([
                     "w-full h-full font-bold cell",
                     ms[i][j].hasItem && cell === 0 && "text-hasitem",
+                    ms[i][j].hasBoss && cell === 0 && "text-hasBoss",
                     mo[i][j] && "opened-cell",
-                    mo[i][j] && cell === 1 && "mine-cell",
-                    mo[i][j] && cell === 2 && "item-cell",
-                    mo[i][j] && cell === 3 && "ally-cell",
+                    mo[i][j] && cell === CELL.monster && "mine-cell",
+                    mo[i][j] && cell === CELL.item && "item-cell",
+                    mo[i][j] && cell === CELL.ally && "ally-cell",
                     (!mo[i][j] || (cell === 0 && ms[i][j].count === 0)) && "text-transparent",
                   ])}
                   style={{ animationDelay: `${(i + j) / 10}s` }}
@@ -402,6 +435,7 @@ const Home: NextPage = () => {
                           "!",
                           <img src={`/assets/itembox.gif?${i * 10000 + j}`} key={i * 10000 + j} />,
                           <img src="/assets/allytile.png" key={i * 10000 + j} />,
+                          <img src="" key={i * 10000 + j} />,
                         ][cell]
                       : "."}
                   </div>
@@ -452,6 +486,21 @@ const Home: NextPage = () => {
           </div>
         )}
       </AnimatePresence>
+      {!isGameStarted && (
+        <div className="w-screen h-screen flex flex-col justify-center items-center bg-black bg-opacity-50 fixed inset-0 z-[1000000]">
+          <button
+            onClick={() => {
+              setIsGameStarted(true);
+              bgm.loop = true;
+              bgm.play();
+              console.log("dd");
+            }}
+            className="bg-[url(/assets/button.png)] bg-cover [image-rendering:pixelated] bg-no-repeat w-48 h-14 pb-2 flex items-center justify-center text-xl font-extrabold"
+          >
+            START
+          </button>
+        </div>
+      )}
     </>
   );
 };

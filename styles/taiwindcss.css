@@ -24,8 +24,12 @@
   animation-fill-mode: var(--animation-fill-mode);
 }
 
+.Toastify {
+  @apply !relative;
+}
+
 .Toastify__toast-container {
-  @apply !absolute !bottom-full;
+  @apply !absolute !bottom-full !left-0 !transform-none;
 }
 
 .Toastify__progress-bar {
