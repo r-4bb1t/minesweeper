@@ -158,7 +158,7 @@ const Home: NextPage = () => {
       let x = a[0][0],
         y = a[0][1];
       a.splice(0, 1);
-      for (let k = 0; k < 4; k++) {
+      for (let k = 0; k < 8; k++) {
         if (x + dir[k][0] < 0 || x + dir[k][0] >= sz || y + dir[k][1] < 0 || y + dir[k][1] >= sz) continue;
         if (initMo[x + dir[k][0]][y + dir[k][1]]) continue;
 
@@ -256,7 +256,7 @@ const Home: NextPage = () => {
     if (allies.length > 3) return;
     setAllies((a) => [...a, i]);
     setHps((h) => [...h, 50]);
-    setOptions((o) => [...o, [0, 1]]);
+    setOptions((o) => [...o, allies_info[i].defult]);
   };
 
   useEffect(() => {
@@ -321,7 +321,7 @@ const Home: NextPage = () => {
                   <div className="absolute">
                     <img src="/assets/frame.png" className="object-contain z-[3000]" />
                   </div>
-                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-slate-900 bg-opacity-60 p-3 z-[5000] text-white">
+                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-stone-900 bg-opacity-60 p-3 z-[5000] text-white">
                     {allies_info[allies[i]].name}의 스킬
                     {options[i].map(
                       (o, i) =>
@@ -372,7 +372,7 @@ const Home: NextPage = () => {
                   <div className="absolute bottom-1 right-1 text-sm w-4 h-4 items-center justify-center flex">
                     {items[i].cnt}
                   </div>
-                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-slate-900 bg-opacity-60 p-3 z-[5000] text-white whitespace-nowrap">
+                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-stone-900 bg-opacity-60 p-3 z-[5000] text-white whitespace-nowrap">
                     {itemscript[items[i].id].title}의 효과
                     <br />
                     {(itemscript[items[i].id].attack > 0 ||

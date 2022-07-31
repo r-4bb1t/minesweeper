@@ -127,10 +127,10 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
               isEnemyAttacked && "animate-shake",
             ])}
           />
-          <div className="w-full grid grid-cols-4 bg-slate-200">
+          <div className="w-full grid grid-cols-4 bg-stone-200">
             {allies.map((a, i) => (
               <div
-                className={cc(["aspect-square w-full relative", myTurn && teamIndex === i && "bg-slate-300"])}
+                className={cc(["aspect-square w-full relative", myTurn && teamIndex === i && "bg-stone-300"])}
                 key={a}
               >
                 <div
@@ -168,7 +168,7 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
               </div>
             ))}
           </div>
-          <div className="w-full grid grid-cols-5 bg-slate-200">
+          <div className="w-full grid grid-cols-5 bg-stone-200">
             {items.map((item, i) => (
               <div key={i}></div>
             ))}

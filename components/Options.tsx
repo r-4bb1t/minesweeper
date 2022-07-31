@@ -92,6 +92,7 @@ const Options = ({
               {optionscript[o].defence > 0 && (
                 <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
               )}
+              {optionscript[o].isAll && <span className="digital text-sm"> 전역</span>}
             </>
           )}
         </div>
