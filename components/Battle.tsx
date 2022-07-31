@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "animate.css/animate.min.css";
 
 interface BattleProps {
+  enemyType: number;
   hps: number[];
   setHps: (a: number | any) => void;
   endBattle: () => void;
@@ -20,11 +21,11 @@ interface BattleProps {
   setItems: (a: { id: number; cnt: number }[] | any) => void;
 }
 
-const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setItems }: BattleProps) => {
+const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, items, setItems }: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(enemyType === 0 ? 0 : 4);
   const [teamIndex, setTeamIndex] = useState(-1);
-  const [enemyHp, setEnemyHp] = useState(50);
+  const [enemyHp, setEnemyHp] = useState(enemyType === 0 ? 50 : 200);
   const [isEnemyAttacked, setIsEnemyAttacked] = useState(false);
   const [isAttacked, setIsAttacked] = useState(Array.from({ length: hps.length }, () => false));
   const [myTurn, setMyTurn] = useState(false);
@@ -111,13 +112,16 @@ const Battle = ({ hps, setHps, endBattle, allies, gameOver, options, items, setI
           ])}
         >
           <div className="w-80 h-4 bg-black relative mt-10 rounded-full flex-shrink-0">
-            <div className="h-full bg-enemy-hp rounded-full" style={{ width: `${(enemyHp / 50) * 100}%` }}></div>
+            <div
+              className="h-full bg-enemy-hp rounded-full"
+              style={{ width: `${(enemyHp / (enemyType === 0 ? 50 : 200)) * 100}%` }}
+            ></div>
             <div className="absolute inset-0">
               <img src="/assets/enemyhpframe.png" />
             </div>
           </div>
           <img
-            src="/assets/sheep.png"
+            src={enemyType === 0 ? "/assets/sheep.png" : "/assets/boss.png"}
             className={cc([
               "w-full md:h-48 h-1/3 object-contain p-10 flex-shrink-0",
               isEnemyAttacked && "animate-shake",

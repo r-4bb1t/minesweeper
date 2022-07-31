@@ -62,6 +62,7 @@ const Home: NextPage = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [bgm] = useState(typeof Audio !== "undefined" && new Audio("/assets/sound/main.wav"));
+  const [enemyType, setEnemyType] = useState(0);
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -179,6 +180,19 @@ const Home: NextPage = () => {
       enemyAudio.play();
       setIsEffect(true);
       setIsPlaying(false);
+      setEnemyType(0);
+      setTimeout(() => {
+        setIsBattle(true);
+        setIsEffect(false);
+      }, 500);
+    }
+
+    if (mp[a[0][0]][a[0][1]] === CELL.boss) {
+      var enemyAudio = new Audio("/assets/sound/boss.wav");
+      enemyAudio.play();
+      setIsEffect(true);
+      setIsPlaying(false);
+      setEnemyType(1);
       setTimeout(() => {
         setIsBattle(true);
         setIsEffect(false);
@@ -344,8 +358,8 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="w-full flex flex-col items-center gap-1">
-          <div className="w-fit grid grid-cols-10 gap-1">
-            {[...Array(10)].map((_, i) => {
+          <div className="w-fit grid grid-cols-4 gap-1">
+            {[...Array(4)].map((_, i) => {
               return items[i] ? (
                 <div className="w-8 h-8 relative group" key={i}>
                   <div className="absolute inset-1 bg-itembox" />
@@ -437,7 +451,7 @@ const Home: NextPage = () => {
                           "!",
                           <img src={`/assets/itembox.gif?${i * 10000 + j}`} key={i * 10000 + j} />,
                           <img src="/assets/allytile.png" key={i * 10000 + j} />,
-                          <img src="" key={i * 10000 + j} />,
+                          "!!",
                         ][cell]
                       : "."}
                   </div>
@@ -457,6 +471,7 @@ const Home: NextPage = () => {
       <AnimatePresence>
         {isBattle && (
           <Battle
+            enemyType={enemyType}
             endBattle={() => setIsBattle(false)}
             hps={hps}
             setHps={setHps}

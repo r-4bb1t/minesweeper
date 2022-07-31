@@ -83,7 +83,7 @@ const Text = ({
     <div className="w-full flex flex-col min-h-0 p-2 h-full max-h-full relative bg-black text-white md:rounded-b-xl flex-shrink">
       <div
         className={cc([
-          "w-full px-8 py-4 max-h-full overflow-y-auto",
+          "w-full px-8 py-4 max-h-full overflow-y-auto select-none",
           (!isFinished || (script[index].next && (index % 2 === 0 || isEnd))) && flag && "after-text",
           !isFinished && "is-typing",
         ])}
