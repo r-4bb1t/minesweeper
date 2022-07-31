@@ -180,7 +180,7 @@ const Home: NextPage = () => {
     const initMo = Array.from(mo);
     if (!isPlaying) return;
 
-    if (mo[a[0][0]][a[0][1]] && mp[a[0][0]][a[0][1]] === CELL.none) {
+    if (mo[a[0][0]][a[0][1]]) {
       /* var openAudio = new Audio("/assets/sound/open.wav");
       openAudio.play();
       let p = 0;
