@@ -239,6 +239,7 @@ const Home: NextPage = () => {
       setIsEffect(true);
       setIsPlaying(false);
       setEnemyType(1);
+      setEnemyCnt(1);
       setTimeout(() => {
         setIsBattle(true);
         setIsEffect(false);
