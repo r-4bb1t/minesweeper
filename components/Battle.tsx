@@ -8,9 +8,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ToastContainer, toast, cssTransition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "animate.css/animate.min.css";
+import { nextLevel } from "pages";
 
 interface BattleProps {
   enemyType: number;
+  enemyCnt: number;
   hps: number[];
   setHps: (a: number | any) => void;
   endBattle: () => void;
@@ -19,17 +21,33 @@ interface BattleProps {
   options: number[][];
   items: { id: number; cnt: number }[];
   setItems: (a: { id: number; cnt: number }[] | any) => void;
+  setExps: Function;
+  levels: number[];
 }
 
-const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, items, setItems }: BattleProps) => {
+const Battle = ({
+  enemyCnt,
+  enemyType,
+  hps,
+  setHps,
+  endBattle,
+  allies,
+  gameOver,
+  options,
+  items,
+  setItems,
+  setExps,
+  levels,
+}: BattleProps) => {
   const [isEffect, setIsEffect] = useState(false);
-  const [index, setIndex] = useState(enemyType === 0 ? 0 : 4);
+  const [index, setIndex] = useState(enemyType === 0 ? (enemyCnt > 1 ? 8 : 0) : 4);
   const [teamIndex, setTeamIndex] = useState(-1);
-  const [enemyHp, setEnemyHp] = useState(enemyType === 0 ? 50 : 200);
+  const [enemyHp, setEnemyHp] = useState(enemyType === 0 ? 50 * enemyCnt : 200);
   const [isEnemyAttacked, setIsEnemyAttacked] = useState(false);
   const [isAttacked, setIsAttacked] = useState(Array.from({ length: hps.length }, () => false));
   const [myTurn, setMyTurn] = useState(false);
   const [prevHps, setPrevHps] = useState(Array.from(hps));
+  const [defences, setDefences] = useState(Array.from({ length: allies.length }, () => 0));
 
   const [flag, setFlag] = useState(true);
 
@@ -49,6 +67,7 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
     if (!flag && enemyHp <= 0) {
       const audio = new Audio("/assets/sound/win.wav");
       audio.play();
+      setExps((exps: number[]) => exps.map((e) => e + 50 * enemyCnt));
       endBattle();
     }
   }, [flag]);
@@ -71,7 +90,9 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
     if (!("attack" in script[index]) || enemyHp <= 0) return;
     const attacks = enemy_attack[script[index].attack!].attack;
     const newAttacked = Array.from(isAttacked);
-    const randomAttack = attacks[Math.floor(Math.random() * attacks.length)];
+    const randomAttack = attacks[Math.floor(Math.random() * attacks.length)].map((a, i) =>
+      Math.max(a * enemyCnt - defences[i], 0),
+    );
     const newHps = hps.map((hp, i) => {
       if (randomAttack[i] > 0 && hp > 0) {
         newAttacked[i] = true;
@@ -91,6 +112,7 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
       }
       return Math.max(hp - randomAttack[i], 0);
     });
+    setDefences((d) => d.map(() => 0));
     setPrevHps(hps);
     setHps(newHps);
     setIsAttacked(newAttacked);
@@ -114,19 +136,21 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
           <div className="w-80 h-4 bg-black relative mt-10 rounded-full flex-shrink-0">
             <div
               className="h-full bg-enemy-hp rounded-full"
-              style={{ width: `${(enemyHp / (enemyType === 0 ? 50 : 200)) * 100}%` }}
+              style={{ width: `${(enemyHp / (enemyType === 0 ? 50 * enemyCnt : 200)) * 100}%` }}
             ></div>
             <div className="absolute inset-0">
               <img src="/assets/enemyhpframe.png" />
             </div>
           </div>
-          <img
-            src={enemyType === 0 ? "/assets/sheep.png" : "/assets/boss.png"}
-            className={cc([
-              "w-full md:h-48 h-1/3 object-contain p-10 flex-shrink-0",
-              isEnemyAttacked && "animate-shake",
-            ])}
-          />
+          <div className="w-full md:h-48 h-1/3 p-10 flex-shrink-0 flex justify-center">
+            {[...Array(enemyCnt)].map((i) => (
+              <img
+                src={enemyType === 0 ? "/assets/sheep.png" : "/assets/boss.png"}
+                className={cc(["h-full object-contain -mx-10", isEnemyAttacked && "animate-shake"])}
+                key={i}
+              />
+            ))}
+          </div>
           <div className="w-full grid grid-cols-4 bg-stone-200">
             {allies.map((a, i) => (
               <div
@@ -178,6 +202,8 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
               setIsEffect(true);
               setTimeout(() => setIsEffect(false), 500);
             }}
+            enemyCnt={enemyCnt}
+            enemyType={enemyType}
             index={index}
             setIndex={setIndex}
             options={options[teamIndex]}
@@ -193,6 +219,8 @@ const Battle = ({ enemyType, hps, setHps, endBattle, allies, gameOver, options, 
             hps={hps}
             flag={flag}
             setFlag={setFlag}
+            setDefences={setDefences}
+            levels={levels}
           />
         </motion.div>
       </div>

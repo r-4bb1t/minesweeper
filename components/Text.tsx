@@ -7,6 +7,8 @@ import allies_info from "../scripts/allies_info.json";
 import Options from "./Options";
 
 export interface TextProps {
+  enemyType: number;
+  enemyCnt: number;
   shake: () => void;
   index: number;
   setIndex: Dispatch<SetStateAction<number>>;
@@ -23,6 +25,8 @@ export interface TextProps {
   flag: boolean;
   setFlag: (f: boolean) => void;
   setHps: Function;
+  setDefences: Function;
+  levels: number[];
 }
 
 const SkipButton = ({ isEnd, next, myTurn }: { isEnd: boolean; next: () => void; myTurn: boolean }) => {
@@ -37,6 +41,8 @@ const SkipButton = ({ isEnd, next, myTurn }: { isEnd: boolean; next: () => void;
 };
 
 const Text = ({
+  enemyCnt,
+  enemyType,
   isEnd,
   shake,
   index,
@@ -53,6 +59,8 @@ const Text = ({
   setFlag,
   setItems,
   setHps,
+  setDefences,
+  levels,
 }: TextProps) => {
   const [isFinished, setIsFinished] = useState(false);
   const [isDead, setIsDead] = useState(Array.from({ length: allies.length }, () => false));
@@ -145,12 +153,16 @@ const Text = ({
                       setEnemyHp={setEnemyHp}
                       setItems={setItems}
                       setHps={setHps}
+                      setDefences={setDefences}
+                      levels={levels}
                     />
                   </div>
                 </>
               ) : !isEnd && "attack" in script[index] ? (
                 <>
-                  <span className="digital">양은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.</span>
+                  <span className="digital">
+                    양{enemyCnt > 1 && "들"}은 {enemy_attack[script[index].attack!].title}을(를) 시전했다.
+                  </span>
                   {allies.map((ally, i) => (
                     <>
                       {gaps[i] && !isDead[i] ? (

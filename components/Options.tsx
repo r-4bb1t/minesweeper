@@ -17,6 +17,8 @@ const Options = ({
   items,
   setItems,
   setHps,
+  setDefences,
+  levels,
 }: {
   setEnemyHp: TextProps["setEnemyHp"];
   teamIndex: TextProps["teamIndex"];
@@ -28,6 +30,8 @@ const Options = ({
   items: TextProps["items"];
   setItems: TextProps["setItems"];
   setHps: TextProps["setHps"];
+  setDefences: TextProps["setDefences"];
+  levels: TextProps["levels"];
 }) => {
   return (
     <>
@@ -38,16 +42,16 @@ const Options = ({
           onClick={
             teamIndex < allies.length - 1
               ? () => {
-                  if (optionscript[o].attack > 0) {
-                    setEnemyHp((s: number) => s - optionscript[o].attack);
+                  if (optionscript[o].attack[levels[teamIndex] - 1] > 0) {
+                    setEnemyHp((s: number) => s - optionscript[o].attack[levels[teamIndex] - 1]);
                     toast(allies_info[allies[teamIndex]].messages.attack, { containerId: teamIndex });
                     //newMessages[teamIndex] = allies_info[allies[teamIndex]].messages.attack;
                   }
-                  if (optionscript[o].heal > 0) {
+                  if (optionscript[o].heal[levels[teamIndex] - 1] > 0) {
                     setHps((hps: number[]) =>
                       hps.map((hp, ii) => {
                         if (ii === teamIndex) {
-                          hp = Math.min(optionscript[o].heal + hp, 50);
+                          hp = Math.min(optionscript[o].heal[levels[teamIndex] - 1] + hp, 50);
                           toast(allies_info[allies[teamIndex]].messages.heal, { containerId: teamIndex });
                           //newMessages[ii] = allies_info[allies[ii]].messages.heal;
                         }
@@ -55,23 +59,44 @@ const Options = ({
                       }),
                     );
                   }
+                  if (optionscript[o].defence[levels[teamIndex] - 1] > 0) {
+                    setDefences((defences: number[]) =>
+                      defences.map((defence, ii) => {
+                        if (ii === teamIndex) {
+                          defence = optionscript[o].defence[levels[teamIndex] - 1];
+                        }
+                        return defence;
+                      }),
+                    );
+                  }
+
                   nextTeam();
                 }
               : () => {
-                  if (optionscript[o].attack > 0) {
-                    setEnemyHp((s: number) => s - optionscript[o].attack);
+                  if (optionscript[o].attack[levels[teamIndex] - 1] > 0) {
+                    setEnemyHp((s: number) => s - optionscript[o].attack[levels[teamIndex] - 1]);
                     toast(allies_info[allies[teamIndex]].messages.attack, { containerId: teamIndex });
                     //newMessages[teamIndex] = allies_info[allies[teamIndex]].messages.attack;
                   }
-                  if (optionscript[o].heal > 0) {
+                  if (optionscript[o].heal[levels[teamIndex] - 1] > 0) {
                     setHps((hps: number[]) =>
                       hps.map((hp, ii) => {
                         if (ii === teamIndex) {
-                          hp = Math.min(optionscript[o].heal + hp, 50);
+                          hp = Math.min(optionscript[o].heal[levels[teamIndex] - 1] + hp, 50);
                           toast(allies_info[allies[teamIndex]].messages.heal, { containerId: teamIndex });
                           //newMessages[ii] = allies_info[allies[ii]].messages.heal;
                         }
                         return hp;
+                      }),
+                    );
+                  }
+                  if (optionscript[o].defence[levels[teamIndex] - 1] > 0) {
+                    setDefences((defences: number[]) =>
+                      defences.map((defence, ii) => {
+                        if (ii === teamIndex) {
+                          defence = optionscript[o].defence[levels[teamIndex] - 1];
+                        }
+                        return defence;
                       }),
                     );
                   }
@@ -81,18 +106,28 @@ const Options = ({
           }
         >
           {">"} {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
-          {(optionscript[o].attack > 0 || optionscript[o].heal > 0 || optionscript[o].defence > 0) && (
+          {(optionscript[o].attack[levels[teamIndex] - 1] > 0 ||
+            optionscript[o].heal[levels[teamIndex] - 1] > 0 ||
+            optionscript[o].defence[levels[teamIndex] - 1] > 0) && (
             <>
-              {optionscript[o].attack > 0 && (
-                <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+              {optionscript[o].attack[levels[teamIndex] - 1] > 0 && (
+                <span className="text-red-400 digital text-sm">
+                  {" "}
+                  {optionscript[o].attack[levels[teamIndex] - 1]} 공격
+                </span>
               )}
-              {optionscript[o].heal > 0 && (
-                <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+              {optionscript[o].heal[levels[teamIndex] - 1] > 0 && (
+                <span className="text-green-400 digital text-sm">
+                  {" "}
+                  {optionscript[o].heal[levels[teamIndex] - 1]} 회복
+                </span>
               )}
-              {optionscript[o].defence > 0 && (
-                <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+              {optionscript[o].defence[levels[teamIndex] - 1] > 0 && (
+                <span className="text-blue-400 digital text-sm">
+                  {" "}
+                  {optionscript[o].defence[levels[teamIndex] - 1]} 방어
+                </span>
               )}
-              {optionscript[o].isAll && <span className="digital text-sm"> 전역</span>}
             </>
           )}
         </div>
@@ -125,6 +160,16 @@ const Options = ({
                       return hp;
                     }),
                   );
+                  if (itemscript[o.id].defence > 0) {
+                    setDefences((defences: number[]) =>
+                      defences.map((defence, ii) => {
+                        if (ii === teamIndex) {
+                          defence = itemscript[o.id].defence;
+                        }
+                        return defence;
+                      }),
+                    );
+                  }
                   nextTeam();
                 }
               : () => {
@@ -147,6 +192,16 @@ const Options = ({
                       return hp;
                     }),
                   );
+                  if (itemscript[o.id].defence > 0) {
+                    setDefences((defences: number[]) =>
+                      defences.map((defence, ii) => {
+                        if (ii === teamIndex) {
+                          defence = itemscript[o.id].defence;
+                        }
+                        return defence;
+                      }),
+                    );
+                  }
                   setIndex(script[index].next);
                 }
           }

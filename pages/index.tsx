@@ -34,6 +34,8 @@ enum CELL {
   boss,
 }
 
+export const nextLevel = [100, 200, 300, Number.POSITIVE_INFINITY];
+
 const Home: NextPage = () => {
   const sz = 15;
   const [mp, setMp] = useState(Array.from({ length: sz }, () => Array.from({ length: sz }, () => CELL.none)));
@@ -49,6 +51,8 @@ const Home: NextPage = () => {
 
   const [hps, setHps] = useState([50]);
   const [options, setOptions] = useState([[0, 1]]);
+  const [levels, setLevels] = useState([1]);
+  const [exps, setExps] = useState([0]);
 
   const [isEffect, setIsEffect] = useState(false);
 
@@ -62,7 +66,9 @@ const Home: NextPage = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [bgm] = useState(typeof Audio !== "undefined" && new Audio("/assets/sound/main.wav"));
+
   const [enemyType, setEnemyType] = useState(0);
+  const [enemyCnt, setEnemyCnt] = useState(0);
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -172,7 +178,29 @@ const Home: NextPage = () => {
   const open = (xx: number, yy: number) => {
     const a = [[xx, yy]];
     const initMo = Array.from(mo);
-    if (!isPlaying || mo[a[0][0]][a[0][1]]) return;
+    if (!isPlaying) return;
+
+    if (mo[a[0][0]][a[0][1]] && mp[a[0][0]][a[0][1]] === CELL.none) {
+      /* var openAudio = new Audio("/assets/sound/open.wav");
+      openAudio.play();
+      let p = 0;
+      for (let k = 0; k < 8; k++) {
+        if (xx + dir[k][0] < 0 || xx + dir[k][0] >= sz || yy + dir[k][1] < 0 || yy + dir[k][1] >= sz) continue;
+        if (mo[xx + dir[k][0]][yy + dir[k][1]] && mp[xx + dir[k][0]][yy + dir[k][1]] !== CELL.none) p++;
+        else if (mm[xx + dir[k][0]][yy + dir[k][1]]) p++;
+      }
+      if (p === ms[xx][yy].count) {
+        for (let k = 0; k < 8; k++) {
+          if (xx + dir[k][0] < 0 || xx + dir[k][0] >= sz || yy + dir[k][1] < 0 || yy + dir[k][1] >= sz) continue;
+          if (mo[xx + dir[k][0]][yy + dir[k][1]] && mp[xx + dir[k][0]][yy + dir[k][1]] !== CELL.none) continue;
+          if (mm[xx + dir[k][0]][yy + dir[k][1]]) continue;
+
+          open(xx + dir[k][0], yy + dir[k][1]);
+        }
+      } */
+      return;
+    }
+
     initMo[a[0][0]][a[0][1]] = true;
 
     if (mp[a[0][0]][a[0][1]] === CELL.monster) {
@@ -180,7 +208,25 @@ const Home: NextPage = () => {
       enemyAudio.play();
       setIsEffect(true);
       setIsPlaying(false);
+
+      const b = [[xx, yy]];
+      let f = 0;
+      while (b.length > 0) {
+        let x = b[0][0],
+          y = b[0][1];
+        f++;
+        initMo[x][y] = true;
+        b.splice(0, 1);
+        for (let k = 0; k < 4; k++) {
+          if (x + dir[k][0] < 0 || x + dir[k][0] >= sz || y + dir[k][1] < 0 || y + dir[k][1] >= sz) continue;
+          if (initMo[x + dir[k][0]][y + dir[k][1]]) continue;
+
+          if (mp[x + dir[k][0]][y + dir[k][1]] === CELL.monster) b.push([x + dir[k][0], y + dir[k][1]]);
+        }
+      }
+
       setEnemyType(0);
+      setEnemyCnt(f);
       setTimeout(() => {
         setIsBattle(true);
         setIsEffect(false);
@@ -234,7 +280,7 @@ const Home: NextPage = () => {
         let x = a[0][0],
           y = a[0][1];
         a.splice(0, 1);
-        for (let k = 0; k < 4; k++) {
+        for (let k = 0; k < 8; k++) {
           if (x + dir[k][0] < 0 || x + dir[k][0] >= sz || y + dir[k][1] < 0 || y + dir[k][1] >= sz) continue;
           if (initMo[x + dir[k][0]][y + dir[k][1]]) continue;
 
@@ -242,6 +288,7 @@ const Home: NextPage = () => {
           if (ms[x + dir[k][0]][y + dir[k][1]].count === 0) a.push([x + dir[k][0], y + dir[k][1]]);
         }
       }
+
     setMo(initMo);
   };
 
@@ -257,6 +304,8 @@ const Home: NextPage = () => {
     setAllies((a) => [...a, i]);
     setHps((h) => [...h, 50]);
     setOptions((o) => [...o, allies_info[i].defult]);
+    setExps((e) => [...e, 0]);
+    setLevels((l) => [...l, 1]);
   };
 
   useEffect(() => {
@@ -284,15 +333,34 @@ const Home: NextPage = () => {
       const newAllies = allies.filter((_, i) => hps[i] > 0);
       const newHps = hps.filter((h) => h > 0);
       const newOptions = options.filter((_, i) => hps[i] > 0);
+      const newExps = exps.filter((_, i) => hps[i] > 0);
+      const newLevels = levels.filter((_, i) => hps[i] > 0);
       setHps(newHps);
       setAllies(newAllies);
       setOptions(newOptions);
+      setExps(newExps);
+      setLevels(newLevels);
       setIsPlaying(true);
       if (bgm && bgm.paused && !gameOver) bgm.play();
     } else {
       if (bgm) bgm.pause();
     }
   }, [isBattle]);
+
+  useEffect(() => {
+    const newExps = Array.from(exps);
+    const newLevels = Array.from(levels);
+    exps.forEach((exp, i) => {
+      if (exp >= nextLevel[levels[i] - 1]) {
+        newExps[i] = exp - nextLevel[levels[i] - 1];
+        newLevels[i]++;
+      }
+    });
+    if (newExps.some((exp, i) => exp != exps[i])) {
+      setExps(newExps);
+      setLevels(newLevels);
+    }
+  }, [exps]);
 
   return (
     <>
@@ -321,25 +389,41 @@ const Home: NextPage = () => {
                   <div className="absolute">
                     <img src="/assets/frame.png" className="object-contain z-[3000]" />
                   </div>
-                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-stone-900 bg-opacity-60 p-3 z-[5000] text-white">
-                    {allies_info[allies[i]].name}의 스킬
+                  <div className="absolute top-[calc(100%+0.5rem)] hidden group-hover:block bg-stone-900 bg-opacity-60 p-3 z-[5000] text-white whitespace-nowrap">
+                    {allies_info[allies[i]].name}{" "}
+                    <small>
+                      LV.{levels[i]} ({exps[i]} / {nextLevel[levels[i] - 1]})
+                    </small>
+                    <br />
+                    <small>| 체력 {hps[i]} / 50</small>
+                    <br />
+                    <small>| 스킬</small>
                     {options[i].map(
                       (o, i) =>
                         o !== 0 && (
                           <div key={i} className="whitespace-nowrap">
                             {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
-                            {(optionscript[o].attack > 0 ||
-                              optionscript[o].heal > 0 ||
-                              optionscript[o].defence > 0) && (
+                            {(optionscript[o].attack[levels[i] - 1] > 0 ||
+                              optionscript[o].heal[levels[i] - 1] > 0 ||
+                              optionscript[o].defence[levels[i] - 1] > 0) && (
                               <>
-                                {optionscript[o].attack > 0 && (
-                                  <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+                                {optionscript[o].attack[levels[i] - 1] > 0 && (
+                                  <span className="text-red-400 digital text-sm">
+                                    {" "}
+                                    {optionscript[o].attack[levels[i] - 1]} 공격
+                                  </span>
                                 )}
-                                {optionscript[o].heal > 0 && (
-                                  <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+                                {optionscript[o].heal[levels[i] - 1] > 0 && (
+                                  <span className="text-green-400 digital text-sm">
+                                    {" "}
+                                    {optionscript[o].heal[levels[i] - 1]} 회복
+                                  </span>
                                 )}
-                                {optionscript[o].defence > 0 && (
-                                  <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+                                {optionscript[o].defence[levels[i] - 1] > 0 && (
+                                  <span className="text-blue-400 digital text-sm">
+                                    {" "}
+                                    {optionscript[o].defence[levels[i] - 1]} 방어
+                                  </span>
                                 )}
                               </>
                             )}
@@ -472,6 +556,7 @@ const Home: NextPage = () => {
         {isBattle && (
           <Battle
             enemyType={enemyType}
+            enemyCnt={enemyCnt}
             endBattle={() => setIsBattle(false)}
             hps={hps}
             setHps={setHps}
@@ -480,6 +565,8 @@ const Home: NextPage = () => {
             items={items}
             gameOver={() => setGameOver(true)}
             setItems={setItems}
+            setExps={setExps}
+            levels={levels}
           />
         )}
         {isAllyOpen !== -1 && (

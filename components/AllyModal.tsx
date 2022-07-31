@@ -44,20 +44,28 @@ const AllyModal = ({ setAllies, newAlly, close, ok }: AllyModalProps) => {
                               {allies_info[newAlly].name}의 기본 스킬{">"}
                             </div>
                             {optionscript[o].title[Math.floor(Math.random() * optionscript[o].title.length)]}
-                            {(optionscript[o].attack > 0 ||
-                              optionscript[o].heal > 0 ||
-                              optionscript[o].defence > 0) && (
+                            {(optionscript[o].attack[0] > 0 ||
+                              optionscript[o].heal[0] > 0 ||
+                              optionscript[o].defence[0] > 0) && (
                               <>
-                                {optionscript[o].attack > 0 && (
-                                  <span className="text-red-400 digital text-sm"> {optionscript[o].attack} 공격</span>
+                                {optionscript[o].attack[0] > 0 && (
+                                  <span className="text-red-400 digital text-sm">
+                                    {" "}
+                                    {optionscript[o].attack[0]} 공격
+                                  </span>
                                 )}
-                                {optionscript[o].heal > 0 && (
-                                  <span className="text-green-400 digital text-sm"> {optionscript[o].heal} 회복</span>
+                                {optionscript[o].heal[0] > 0 && (
+                                  <span className="text-green-400 digital text-sm">
+                                    {" "}
+                                    {optionscript[o].heal[0]} 회복
+                                  </span>
                                 )}
-                                {optionscript[o].defence > 0 && (
-                                  <span className="text-blue-400 digital text-sm"> {optionscript[o].defence} 방어</span>
+                                {optionscript[o].defence[0] > 0 && (
+                                  <span className="text-blue-400 digital text-sm">
+                                    {" "}
+                                    {optionscript[o].defence[0]} 방어
+                                  </span>
                                 )}
-                                {optionscript[o].isAll && <span className="digital text-sm"> 전역</span>}
                               </>
                             )}
                           </div>

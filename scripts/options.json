@@ -2,25 +2,22 @@
   {
     "id": 0,
     "title": ["멍때린다.", "노래를 부른다.", "생각에 잠긴다.", "술을 마신다."],
-    "attack": 0,
-    "heal": 0,
-    "defence": 0,
-    "isAll": false
+    "attack": [0, 0, 0, 0],
+    "heal": [0, 0, 0, 0],
+    "defence": [0, 0, 0, 0]
   },
   {
     "id": 1,
     "title": ["맨손 공격!"],
-    "attack": 10,
-    "heal": 0,
-    "defence": 0,
-    "isAll": false
+    "attack": [10, 20, 30, 40],
+    "heal": [0, 0, 0, 0],
+    "defence": [0, 0, 0, 0]
   },
   {
     "id": 2,
-    "title": ["슉슉!"],
-    "attack": 5,
-    "heal": 0,
-    "defence": 0,
-    "isAll": true
+    "title": ["가드 올리고 바운스!"],
+    "attack": [5, 10, 15, 20],
+    "heal": [0, 0, 0, 0],
+    "defence": [10, 20, 30, 40]
   }
 ]
