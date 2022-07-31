@@ -143,13 +143,20 @@ const Battle = ({
             </div>
           </div>
           <div className="w-full md:h-48 h-1/3 p-10 flex-shrink-0 flex justify-center">
-            {[...Array(enemyCnt)].map((i) => (
+            {enemyType === 0 ? (
+              [...Array(enemyCnt)].map((i) => (
+                <img
+                  src={"/assets/sheep.png"}
+                  className={cc(["h-full object-contain -mx-10", isEnemyAttacked && "animate-shake"])}
+                  key={i}
+                />
+              ))
+            ) : (
               <img
-                src={enemyType === 0 ? "/assets/sheep.png" : "/assets/boss.png"}
-                className={cc(["h-full object-contain -mx-10", isEnemyAttacked && "animate-shake"])}
-                key={i}
+                src="/assets/boss.png"
+                className={cc(["h-full object-contain", isEnemyAttacked && "animate-shake"])}
               />
-            ))}
+            )}
           </div>
           <div className="w-full grid grid-cols-4 bg-stone-200">
             {allies.map((a, i) => (
