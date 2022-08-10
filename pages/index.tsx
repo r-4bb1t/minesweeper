@@ -664,8 +664,7 @@ const Home: NextPage = () => {
             </motion.div>
           </div>
         )}
-        {
-          /* gameWin &&  */
+        {gameWin && (
           <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
             <ReactCanvasConfetti refConfetti={getInstance} className="fixed inset-0 w-full h-full" />
             <motion.div
@@ -678,7 +677,7 @@ const Home: NextPage = () => {
               <div className="font-bold text-2xl">점수: {score}</div>
             </motion.div>
           </div>
-        }
+        )}
       </AnimatePresence>
 
       {!isGameStarted && (
