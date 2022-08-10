@@ -1,12 +1,40 @@
 import AllyModal from "components/AllyModal";
 import Battle from "components/Battle";
 import type { GetServerSideProps, NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import allies_info from "../scripts/allies_info.json";
 import optionscript from "../scripts/options.json";
 import itemscript from "../scripts/items.json";
 import { AnimatePresence, motion } from "framer-motion";
 import cc from "classcat";
+import ReactCanvasConfetti from "react-canvas-confetti";
+
+function randomInRange(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
+
+const canvasStyles = {
+  position: "fixed",
+  pointerEvents: "none",
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0,
+};
+
+function getAnimationSettings(originXA: number, originXB: number) {
+  return {
+    startVelocity: 30,
+    spread: 360,
+    ticks: 60,
+    zIndex: 0,
+    particleCount: 150,
+    origin: {
+      x: randomInRange(originXA, originXB),
+      y: Math.random() - 0.2,
+    },
+  };
+}
 
 const dir = [
   [1, 0],
@@ -59,6 +87,9 @@ const Home: NextPage = () => {
   const [isBattle, setIsBattle] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  const [gameWin, setGameWin] = useState(false);
+
   const [items, setItems] = useState([] as { id: number; cnt: number }[]);
 
   const [allies, setAllies] = useState([0]);
@@ -72,6 +103,32 @@ const Home: NextPage = () => {
   const [score, setScore] = useState(0);
 
   const [isTipModalOpen, setIsTipModalOpen] = useState(false);
+
+  const refAnimationInstance = useRef<any>(null);
+  const [intervalId, setIntervalId] = useState(null as any);
+
+  const getInstance = useCallback((instance) => {
+    refAnimationInstance.current = instance;
+  }, []);
+
+  const nextTickAnimation = useCallback(() => {
+    if (refAnimationInstance.current) {
+      refAnimationInstance.current(getAnimationSettings(0.1, 0.3));
+      refAnimationInstance.current(getAnimationSettings(0.7, 0.9));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!intervalId) {
+      setIntervalId(setInterval(nextTickAnimation, 400));
+    }
+  }, [intervalId, nextTickAnimation]);
+
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [intervalId]);
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -349,7 +406,13 @@ const Home: NextPage = () => {
       setLevels(newLevels);
       setIsPlaying(true);
       if (bgm && bgm.paused && !gameOver) bgm.play();
-      if (!gameOver) setScore((s) => s + 500);
+      if (!gameOver) {
+        if (enemyType === 0) setScore((s) => s + 500);
+        else {
+          setScore((s) => s + 10000);
+          setGameWin(true);
+        }
+      }
     } else {
       if (bgm) bgm.pause();
     }
@@ -601,7 +664,23 @@ const Home: NextPage = () => {
             </motion.div>
           </div>
         )}
+        {
+          /* gameWin &&  */
+          <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-30 flex items-center justify-center">
+            <ReactCanvasConfetti refConfetti={getInstance} className="fixed inset-0 w-full h-full" />
+            <motion.div
+              initial={{ opacity: 0, y: 100, scale: 0.3 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+              className={"w-[300px] h-[200px] bg-white md:rounded-2xl flex flex-col items-center justify-center"}
+            >
+              <div>승리!</div>
+              <div className="font-bold text-2xl">점수: {score}</div>
+            </motion.div>
+          </div>
+        }
       </AnimatePresence>
+
       {!isGameStarted && (
         <div className="w-screen h-screen flex flex-col justify-center items-center bg-black bg-opacity-50 fixed inset-0 z-[1000000]">
           <button
@@ -619,6 +698,7 @@ const Home: NextPage = () => {
           </button>
         </div>
       )}
+
       {isTipModalOpen && (
         <AnimatePresence>
           <div
