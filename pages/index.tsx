@@ -69,6 +69,9 @@ const Home: NextPage = () => {
 
   const [enemyType, setEnemyType] = useState(0);
   const [enemyCnt, setEnemyCnt] = useState(0);
+  const [score, setScore] = useState(0);
+
+  const [isTipModalOpen, setIsTipModalOpen] = useState(false);
 
   const setMap = () => {
     const initMp = Array.from(mp);
@@ -178,6 +181,7 @@ const Home: NextPage = () => {
   const open = (xx: number, yy: number) => {
     const a = [[xx, yy]];
     const initMo = Array.from(mo);
+    setScore((s) => s + 10);
     if (!isPlaying) return;
 
     if (mo[a[0][0]][a[0][1]]) {
@@ -248,6 +252,7 @@ const Home: NextPage = () => {
 
     if (mp[a[0][0]][a[0][1]] === CELL.ally) {
       //setIsEffect(true);
+      setScore((s) => s + 90);
       setIsPlaying(false);
       setTimeout(() => {
         let i = Math.floor(Math.random() * (allies_info.length - 1) + 1);
@@ -260,6 +265,7 @@ const Home: NextPage = () => {
     if (mp[a[0][0]][a[0][1]] === CELL.item) {
       var itemAudio = new Audio("/assets/sound/item.wav");
       itemAudio.play();
+      setScore((s) => s + 40);
       const newItem = Math.floor(Math.random() * itemscript.length);
       if (items.some((item) => item.id === newItem))
         setItems((items) =>
@@ -343,6 +349,7 @@ const Home: NextPage = () => {
       setLevels(newLevels);
       setIsPlaying(true);
       if (bgm && bgm.paused && !gameOver) bgm.play();
+      if (!gameOver) setScore((s) => s + 500);
     } else {
       if (bgm) bgm.pause();
     }
@@ -371,7 +378,11 @@ const Home: NextPage = () => {
         }`}
       >
         <div className="w-screen h-screen fixed inset-0 pointer-events-none z-[100000] opacity-5 bg-blend-screen _bg-[url(/assets/noise.gif)] bg-repeat" />
-        <div className="w-full h-16 flex flex-col items-center gap-1 mt-4">
+        <div className="fixed top-2 left-2" onClick={() => setIsTipModalOpen(true)}>
+          <img src="/assets/tipbutton.png" />
+        </div>
+        <div className="text-white text-2xl tracking-widest">{score.toString().padStart(5, "0")}</div>
+        <div className="w-full h-16 flex flex-col items-center gap-1">
           <div className="w-64 h-16 grid grid-cols-4">
             {[...Array(4)].map((_, i) => {
               return allies.length > i ? (
@@ -607,6 +618,22 @@ const Home: NextPage = () => {
             START
           </button>
         </div>
+      )}
+      {isTipModalOpen && (
+        <AnimatePresence>
+          <div
+            className="w-screen h-screen flex flex-col justify-center items-center bg-black bg-opacity-70 fixed inset-0 z-[1000000]"
+            onClick={() => setIsTipModalOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 100, scale: 0.3 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+            >
+              <img src="/tip.png" />
+            </motion.div>
+          </div>
+        </AnimatePresence>
       )}
     </>
   );
