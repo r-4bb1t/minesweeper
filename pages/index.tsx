@@ -96,7 +96,6 @@ const Home: NextPage = () => {
   const [isAllyOpen, setIsAllyOpen] = useState(-1);
 
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const [bgm] = useState(typeof Audio !== "undefined" && new Audio("/assets/sound/main.wav"));
 
   const [enemyType, setEnemyType] = useState(0);
   const [enemyCnt, setEnemyCnt] = useState(0);
@@ -405,7 +404,6 @@ const Home: NextPage = () => {
       setExps(newExps);
       setLevels(newLevels);
       setIsPlaying(true);
-      if (bgm && bgm.paused && !gameOver) bgm.play();
       if (!gameOver) {
         if (enemyType === 0) setScore((s) => s + 500);
         else {
@@ -413,8 +411,6 @@ const Home: NextPage = () => {
           setGameWin(true);
         }
       }
-    } else {
-      if (bgm) bgm.pause();
     }
   }, [isBattle]);
 
@@ -681,14 +677,11 @@ const Home: NextPage = () => {
       </AnimatePresence>
 
       {!isGameStarted && (
-        <div className="w-screen h-screen flex flex-col justify-center items-center bg-black bg-opacity-50 fixed inset-0 z-[1000000]">
+        <div className="w-screen h-screen flex flex-col justify-center items-center bg-background fixed inset-0 z-[1000000]">
+          <img src="/assets/title.png" />
           <button
             onClick={() => {
               setIsGameStarted(true);
-              if (bgm) {
-                bgm.loop = true;
-                bgm.play();
-              }
               console.log("dd");
             }}
             className="bg-[url(/assets/button.png)] bg-cover [image-rendering:pixelated] bg-no-repeat w-48 h-14 pb-2 flex items-center justify-center text-xl font-extrabold"
